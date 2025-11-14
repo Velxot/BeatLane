@@ -7,16 +7,20 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Resources\\notesManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\Judge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Resources\\Judge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\\u72C2\u559C\u4E71\u821E_easy.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Resources\\\u72C2\u559C\u4E71\u821E_easy.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\notesScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Resources\\notesScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\llghtsScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Resources\\llghtsScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\Judge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Resources\\Judge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,20 +34,20 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Judge.cs",
-              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\Judge.cs",
-              "RelativeDocumentMoniker": "Assets\\Resources\\Judge.cs",
-              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\Judge.cs",
-              "RelativeToolTip": "Assets\\Resources\\Judge.cs",
-              "ViewState": "AgIAABUAAAAAAAAAAABFwDkAAAAgAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-12T09:30:40.048Z",
+              "DocumentIndex": 2,
+              "Title": "\u72C2\u559C\u4E71\u821E_easy.json",
+              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\\u72C2\u559C\u4E71\u821E_easy.json",
+              "RelativeDocumentMoniker": "Assets\\Resources\\\u72C2\u559C\u4E71\u821E_easy.json",
+              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\\u72C2\u559C\u4E71\u821E_easy.json",
+              "RelativeToolTip": "Assets\\Resources\\\u72C2\u559C\u4E71\u821E_easy.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2025-11-14T14:31:07.413Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "notesScript.cs",
               "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\notesScript.cs",
               "RelativeDocumentMoniker": "Assets\\Resources\\notesScript.cs",
@@ -62,14 +66,27 @@
               "RelativeDocumentMoniker": "Assets\\Resources\\NotesManager.cs",
               "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\NotesManager.cs",
               "RelativeToolTip": "Assets\\Resources\\NotesManager.cs",
-              "ViewState": "AgIAABEAAAAAAAAAAAAAACoAAAA1AAAAAAAAAA==",
+              "ViewState": "AgIAABwAAAAAAAAAAAAewC8AAAAzAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-11-12T08:51:43.281Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
+              "Title": "Judge.cs",
+              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\Judge.cs",
+              "RelativeDocumentMoniker": "Assets\\Resources\\Judge.cs",
+              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\Judge.cs",
+              "RelativeToolTip": "Assets\\Resources\\Judge.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAeAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-12T09:30:40.048Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
               "Title": "llghtsScript.cs",
               "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\llghtsScript.cs",
               "RelativeDocumentMoniker": "Assets\\Resources\\llghtsScript.cs",
@@ -77,8 +94,7 @@
               "RelativeToolTip": "Assets\\Resources\\llghtsScript.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAtAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-12T09:01:14.372Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-12T09:01:14.372Z"
             }
           ]
         }

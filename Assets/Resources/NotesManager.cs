@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
 
 [Serializable]
 public class Data
@@ -40,7 +41,11 @@ public class NotesManager : MonoBehaviour
     //ノーツのprefabを入れる
     [SerializeField] GameObject noteObj;
 
-    [SerializeField] private float VisualOffsetZ = 15.0f;
+    [SerializeField] private float VisualOffsetZ = 5.0f;
+
+    [SerializeField] private AudioSource songAudioSource;
+
+    [SerializeField] private float startDelay = 0.875f;
 
     void OnEnable()
     {
@@ -50,6 +55,12 @@ public class NotesManager : MonoBehaviour
         songName = "狂喜乱舞_easy";
 
         Load(songName);
+
+        if (songAudioSource != null)
+        {
+            // ★修正: PlayDelayedを使用
+            songAudioSource.PlayDelayed(startDelay);
+        }
     }
 
     private void Load(string SongName)
@@ -90,6 +101,21 @@ public class NotesManager : MonoBehaviour
             }
 
             NotesObj.Add(newNote);
+        }
+    }
+    private IEnumerator StartSongWithDelay(float delayTime)
+    {
+        // 指定された秒数だけ待機
+        yield return new WaitForSeconds(delayTime);
+
+        // 待機後、AudioSourceが設定されていれば再生する
+        if (songAudioSource != null)
+        {
+            songAudioSource.Play();
+        }
+        else
+        {
+            Debug.LogError("AudioSourceが設定されていません。");
         }
     }
 
