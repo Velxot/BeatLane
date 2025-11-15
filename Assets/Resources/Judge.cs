@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Judge : MonoBehaviour
 {
@@ -8,6 +9,12 @@ public class Judge : MonoBehaviour
 
     // NotesManagerを入れる変数
     [SerializeField] private NotesManager notesManager;
+
+    //スライダーを入れる変数
+    [SerializeField] private Slider slider;
+
+    // 各レーンのlightsScriptを入れる変数（8レーン分）
+    [SerializeField] private lightsScript[] laneLights; // インデックス0-7がレーン0-7に対応
 
     int[] judgecnt = { 0, 0, 0, 0 };
     int score = 0; // 実際のスコア
@@ -24,8 +31,22 @@ public class Judge : MonoBehaviour
 
     [SerializeField] private AudioClip okClip;
 
+    // ゲージテキストのRectTransformを直接取得 (MessageObj[5]がこれに相当)
+    // Inspectorでこのテキストオブジェクトを直接アサインしてください。
+    [SerializeField] private RectTransform percentTextRect;
+
+    // ゲージ端からのテキストのオフセット（表示調整用）
+    [SerializeField] private float gaugeTextOffset = 10f; // Inspectorで調整してください
+
+    int laneposition;
+
     void Start()
     {
+        slider.maxValue = 100f;
+        slider.value = 0f;
+
+        laneposition = 2;
+
         // NotesManagerがnoteNumを設定した後に計算
         if (notesManager != null && notesManager.noteNum > 0)
         {
@@ -43,6 +64,8 @@ public class Judge : MonoBehaviour
     {
         // スコア表示の更新（徐々に増やす）
         UpdateScoreDisplay();
+        // ゲージテキストの位置と表示を毎フレーム更新
+        UpdateGaugeTextPosition();
 
         // notesManagerとリストが空でないかチェック
         if (notesManager == null || notesManager.NotesTime.Count == 0)
@@ -50,19 +73,27 @@ public class Judge : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.S)) // Sキーが押されたとき
         {
-            CheckNoteHit(2); // レーン2をチェック
+            CheckNoteHit(laneposition); // レーン2をチェック
         }
         if (Input.GetKeyDown(KeyCode.F))
         {
-            CheckNoteHit(3); // レーン3をチェック
+            CheckNoteHit(laneposition + 1); // レーン3をチェック
         }
         if (Input.GetKeyDown(KeyCode.J))
         {
-            CheckNoteHit(4); // レーン4をチェック
+            CheckNoteHit(laneposition + 2); // レーン4をチェック
         }
         if (Input.GetKeyDown(KeyCode.L))
         {
-            CheckNoteHit(5); // レーン5をチェック
+            CheckNoteHit(laneposition + 3); // レーン5をチェック
+        }
+        if (laneposition>0 && Input.GetKeyDown(KeyCode.E))
+        {
+            laneposition--;
+        }
+        if (laneposition < 4 && Input.GetKeyDown(KeyCode.I))
+        {
+            laneposition++;
         }
 
         // 本来ノーツをたたくべき時間から0.1秒たっても入力がなかった場合
@@ -72,6 +103,7 @@ public class Judge : MonoBehaviour
             message(2);
             deleteData(0); // インデックス0を削除
             Debug.Log("Miss");
+            slider.value -= 1.0f;
         }
     }
 
@@ -89,17 +121,18 @@ public class Judge : MonoBehaviour
                 // 判定範囲内（0.1秒以内）かチェック
                 if (timeLag <= 0.10f)
                 {
-                    Judgement(timeLag, i); // インデックスも渡す
+                    Judgement(timeLag, i, lane); // レーン番号も渡す
                     return; // 見つかったら終了
                 }
             }
         }
 
-        // 判定範囲内にノーツがない場合は何もしない（空打ち）
-        Debug.Log($"レーン{lane}: 判定可能なノーツなし");
+        // 判定範囲内にノーツがない場合は空打ち（白く光る）
+        Debug.Log($"レーン{lane}: 空打ち");
+        TriggerLaneLight(lane, 2); // 2は空打ちを表す
     }
 
-    void Judgement(float timeLag, int noteIndex)
+    void Judgement(float timeLag, int noteIndex, int lane)
     {
         // 本来ノーツをたたくべき時間と実際にノーツをたたいた時間の誤差が0.045秒以下だったら
         if (timeLag <= 0.045)
@@ -107,24 +140,50 @@ public class Judge : MonoBehaviour
             Debug.Log("Perfect");
             message(0);
             addScore(0);
-            // ★追加: Perfect判定時に効果音を再生
+            slider.value += 2.5f;
+
+            // Perfect判定時に効果音を再生
             if (judgeSoundSource != null && perfectClip != null)
             {
-                judgeSoundSource.PlayOneShot(perfectClip); // 既存の再生中の音を止めずに効果音を鳴らす
+                judgeSoundSource.PlayOneShot(perfectClip);
             }
-            deleteData(noteIndex);
 
+            // レーンを光らせる（Perfect = 金色）
+            TriggerLaneLight(lane, 0);
+
+            deleteData(noteIndex);
         }
         else if (timeLag <= 0.10) // 0.10秒以下だったら
         {
             Debug.Log("OK");
             message(1);
             addScore(1);
+            slider.value += 2.5f;
+
+            // OK判定時に効果音を再生
             if (judgeSoundSource != null && okClip != null)
             {
-                judgeSoundSource.PlayOneShot(okClip); // 既存の再生中の音を止めずに効果音を鳴らす
+                judgeSoundSource.PlayOneShot(okClip);
             }
+
+            // レーンを光らせる（OK = 青色）
+            TriggerLaneLight(lane, 1);
+
             deleteData(noteIndex);
+        }
+    }
+
+    // レーンライトを発動
+    void TriggerLaneLight(int laneNum, int judgeType)
+    {
+        // レーン番号をそのまま配列インデックスとして使用（レーン0-7 → インデックス0-7）
+        if (laneLights != null && laneNum >= 0 && laneNum < laneLights.Length && laneLights[laneNum] != null)
+        {
+            laneLights[laneNum].LightUp(judgeType);
+        }
+        else
+        {
+            Debug.LogWarning($"レーン{laneNum}のlightsScriptが設定されていません");
         }
     }
 
@@ -234,9 +293,54 @@ public class Judge : MonoBehaviour
             {
                 MessageObj[4].text = Mathf.FloorToInt(displayScore).ToString();
             }
+        }
+    }
 
-            // デバッグ情報
-            //Debug.Log($"表示スコア: {Mathf.FloorToInt(displayScore)} / 目標: {targetScore}");
+    void UpdateGaugeTextPosition()
+    {
+        if (slider == null || percentTextRect == null)
+            return;
+
+        // スライダーのRectTransformを取得
+        RectTransform sliderRect = slider.GetComponent<RectTransform>();
+        if (sliderRect == null)
+            return;
+
+        // スライダーの正規化された値 (0.0f to 1.0f)
+        float normalizedValue = slider.value / slider.maxValue;
+
+        // スライダーのFill領域の幅を計算
+        float fillWidth = sliderRect.rect.width * normalizedValue;
+
+        // スライダーのRectTransformの左端のローカルX座標を計算
+        // (UI要素の中心が(0,0)にあるというUnityのデフォルト設定を仮定)
+        float sliderLeftX = sliderRect.localPosition.x - (sliderRect.rect.width / 2f);
+
+        // テキストの新しいX座標を計算
+        // = スライダーの左端 + 塗りつぶされた幅 - オフセット
+        float newX = sliderLeftX + fillWidth - gaugeTextOffset;
+
+        // Y座標は現在の値を維持
+        float currentY = percentTextRect.localPosition.y;
+
+        // テキストの位置を更新
+        percentTextRect.localPosition = new Vector3(newX, currentY, percentTextRect.localPosition.z);
+
+        // パーセント表示の更新
+        // MessageObj[5]がパーセントテキストであると仮定
+        if (MessageObj.Length > 5 && MessageObj[5] != null)
+        {
+            MessageObj[5].text = slider.value.ToString("F1") + "%";
+        }
+
+
+        if (slider.value >= 70f)
+        {
+            MessageObj[5].color = Color.green;
+        }
+        else
+        {
+            MessageObj[5].color = Color.white;
         }
     }
 }
