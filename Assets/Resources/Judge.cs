@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class Judge : MonoBehaviour
 {
@@ -23,7 +24,9 @@ public class Judge : MonoBehaviour
     int score = 0;
     float displayScore = 0f;
     int targetScore = 0;
-    int scorestandard;
+    int scorestandard;  //1パーフェクトのスコア
+    bool remainderFlug;
+    int remainder;  //オールパーフェクト時に1000000点で合わせるため、あまりを保持
 
     [SerializeField] private float scoreAnimationDuration = 0.3f;
     [SerializeField] private AudioSource judgeSoundSource;
@@ -31,6 +34,8 @@ public class Judge : MonoBehaviour
     [SerializeField] private AudioClip okClip;
     [SerializeField] private RectTransform percentTextRect;
     [SerializeField] private float gaugeTextOffset = 10f;
+
+    float endTime = 0f;
 
     int laneposition;
 
@@ -44,6 +49,8 @@ public class Judge : MonoBehaviour
         if (notesManager != null && notesManager.noteNum > 0)
         {
             scorestandard = 1000000 / notesManager.noteNum;
+            remainderFlug = true;
+            remainder = 1000000 % notesManager.noteNum;
             Debug.Log($"総ノーツ数: {notesManager.noteNum}, 1ノーツあたりのスコア: {scorestandard}");
         }
         else
@@ -51,6 +58,8 @@ public class Judge : MonoBehaviour
             Debug.LogError("NotesManagerが設定されていないか、ノーツ数が0です");
             scorestandard = 0;
         }
+
+        endTime = notesManager.NotesTime[notesManager.NotesTime.Count - 1];
     }
 
     void Update()
@@ -107,6 +116,29 @@ public class Judge : MonoBehaviour
             deleteData(0);
             Debug.Log("Miss");
             slider.value -= 1.0f;
+        }
+
+        if(Time.time > endTime)
+        {
+            if (slider.value<70.0f)
+            {
+                MessageObj[6].text = "FAILED...";
+            }
+            else
+            {
+                MessageObj[6].text = "CLEAR";
+                if (judgecnt[3] == notesManager.noteNum)
+                {
+                    MessageObj[6].text = "FULL COMBO";
+                    if (score == 1000000)
+                    {
+                        MessageObj[6].text = "ALL PERFECT";
+                    }
+                }
+            }
+            OnGameEnd();
+            Invoke("ResultScene", 3f);
+            return;
         }
     }
 
@@ -234,6 +266,12 @@ public class Judge : MonoBehaviour
         if (judge == 0)
         {
             score += scorestandard;
+            if (remainderFlug)
+            {
+                score += remainder;
+                remainderFlug = false;
+            }
+
         }
         else if (judge == 1)
         {
@@ -300,5 +338,49 @@ public class Judge : MonoBehaviour
         {
             MessageObj[5].color = Color.white;
         }
+    }
+
+    void OnGameEnd()
+    {
+        // ゲーム終了時にGameResultDataへコピー
+        GameResultData.Score = score;
+        GameResultData.PerfectCount = judgecnt[0];
+        GameResultData.OkCount = judgecnt[1];
+        GameResultData.MissCount = judgecnt[2];
+        GameResultData.Combo = judgecnt[3];
+        if (score < 700000)
+        {
+            GameResultData.ResultRank = "D";
+        }
+        else if (score < 800000)
+        {
+            GameResultData.ResultRank = "C";
+        }
+        else if (score < 900000)
+        {
+            GameResultData.ResultRank = "B";
+        }
+        else if (score < 950000)
+        {
+            GameResultData.ResultRank = "A";
+        }
+        else if (score < 980000)
+        {
+            GameResultData.ResultRank = "AA";
+        }
+        else if (score < 990000)
+        {
+            GameResultData.ResultRank = "AAA";
+        }
+        else
+        {
+            GameResultData.ResultRank = "S";
+        }
+
+    }
+
+    void ResultScene()
+    {
+        SceneManager.LoadScene("ResultScene");
     }
 }

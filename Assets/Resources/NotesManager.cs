@@ -45,7 +45,7 @@ public class NotesManager : MonoBehaviour
 
     [SerializeField] private AudioSource songAudioSource;
 
-    [SerializeField] private float startDelay = 0.875f;
+    [SerializeField] private float startDelay = 0.75f;
 
     void OnEnable()
     {
