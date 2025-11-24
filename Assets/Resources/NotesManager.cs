@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Collections;
 
 [Serializable]
 public class Data
@@ -37,30 +36,31 @@ public class NotesManager : MonoBehaviour
     //gameobject
     public List<GameObject> NotesObj = new List<GameObject>();
     //ノーツの速度
-    [SerializeField] private float NotesSpeed;
+    [SerializeField] public float NotesSpeed;
     //ノーツのprefabを入れる
     [SerializeField] GameObject noteObj;
 
-    [SerializeField] private float VisualOffsetZ = 5.0f;
+    //[SerializeField] public float VisualOffsetZ = -5.0f;
 
-    [SerializeField] private AudioSource songAudioSource;
+    [SerializeField] private MusicManager musicManager;
 
-    [SerializeField] private float startDelay = 0.75f;
+    private const float JUDGELINE_Z = 5.1f; // 定義を追加 (または直接 5.1f を使用)
 
     void OnEnable()
     {
         //総ノーツを0にする
         noteNum = 0;
-        //読み込む譜面のファイル名を入力
-        songName = "狂喜乱舞_easy";
 
+        // ハードコーディング: 譜面ファイル名を直接指定
+        songName = "狂喜蘭舞";
+
+        Debug.Log($"譜面ファイル: {songName}");
+    }
+
+    // MusicManagerから呼び出される：ノーツを生成する
+    public void GenerateNotes()
+    {
         Load(songName);
-
-        if (songAudioSource != null)
-        {
-            // ★修正: PlayDelayedを使用
-            songAudioSource.PlayDelayed(startDelay);
-        }
     }
 
     private void Load(string SongName)
@@ -72,51 +72,62 @@ public class NotesManager : MonoBehaviour
         //総ノーツ数を設定
         noteNum = inputJson.notes.Length;
 
-
         for (int i = 0; i < inputJson.notes.Length; i++)
         {
             //時間を計算
             float kankaku = 60 / (inputJson.BPM * (float)inputJson.notes[i].LPB);
             float beatSec = kankaku * (float)inputJson.notes[i].LPB;
             float time = (beatSec * inputJson.notes[i].num / (float)inputJson.notes[i].LPB) + inputJson.offset * 0.01f;
+
             //リストに追加
             NotesTime.Add(time);
             LaneNum.Add(inputJson.notes[i].block);
             NoteType.Add(inputJson.notes[i].type);
 
-            float z = NotesTime[i] * NotesSpeed;
-
-            // ★修正: VisualOffsetZをZ座標に加算して、ノーツの初期位置を奥に移動させる
-            float z_initial = z + VisualOffsetZ;
+            float z_initial = time * NotesSpeed + JUDGELINE_Z;
 
             //ノーツを生成
-            // z_initial を使用
             GameObject newNote = Instantiate(noteObj, new Vector3(inputJson.notes[i].block * 2 - 7.0f, 0.55f, z_initial), Quaternion.identity);
 
-            // ★追加: NotesManagerのNotesSpeedをノーツの移動スクリプトに設定
+            // NotesManagerのNotesSpeedをノーツの移動スクリプトに設定
             notes notesComponent = newNote.GetComponent<notes>();
             if (notesComponent != null)
             {
-                notesComponent.notesSpeed = NotesSpeed; // NotesManagerのNotesSpeedを使用
+                notesComponent.notesSpeed = NotesSpeed;
+                notesComponent.targetTime = time;
+                NotesObj.Add(newNote);
             }
 
             NotesObj.Add(newNote);
         }
+
+        Debug.Log($"ノーツ生成完了: {noteNum}個");
     }
-    private IEnumerator StartSongWithDelay(float delayTime)
+
+    public float GetMusicEndTime(float musicStartTime)
     {
-        // 指定された秒数だけ待機
-        yield return new WaitForSeconds(delayTime);
-
-        // 待機後、AudioSourceが設定されていれば再生する
-        if (songAudioSource != null)
+        if (NotesTime.Count > 0)
         {
-            songAudioSource.Play();
+            // 最後のノーツの時間 + 音楽の開始時間
+            return NotesTime[NotesTime.Count - 1] + musicStartTime;
         }
-        else
-        {
-            Debug.LogError("AudioSourceが設定されていません。");
-        }
+        return 0f;
     }
 
+    public void StartNotesMovement(float startMusicTime)
+    {
+        foreach (GameObject noteObj in NotesObj)
+        {
+            if (noteObj != null)
+            {
+                notes notesComponent = noteObj.GetComponent<notes>();
+                if (notesComponent != null)
+                {
+                    // 楽曲開始時刻をノーツに渡し、移動開始フラグを立てる
+                    notesComponent.musicStartTime = startMusicTime;
+                    notesComponent.isGameStarted = true;
+                }
+            }
+        }
+    }
 }

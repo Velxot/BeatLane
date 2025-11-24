@@ -20,6 +20,8 @@ public class Judge : MonoBehaviour
     // NEMSYSコントローラー入力
     [SerializeField] private NEMSYSControllerInput nemsysController;
 
+    [SerializeField] private MusicManager musicManager;
+
     int[] judgecnt = { 0, 0, 0, 0 };
     int score = 0;
     float displayScore = 0f;
@@ -39,27 +41,14 @@ public class Judge : MonoBehaviour
 
     int laneposition;
 
+    bool IsGameEnded = false;
+
     void Start()
     {
         slider.maxValue = 100f;
         slider.value = 0f;
 
         laneposition = 2;
-
-        if (notesManager != null && notesManager.noteNum > 0)
-        {
-            scorestandard = 1000000 / notesManager.noteNum;
-            remainderFlug = true;
-            remainder = 1000000 % notesManager.noteNum;
-            Debug.Log($"総ノーツ数: {notesManager.noteNum}, 1ノーツあたりのスコア: {scorestandard}");
-        }
-        else
-        {
-            Debug.LogError("NotesManagerが設定されていないか、ノーツ数が0です");
-            scorestandard = 0;
-        }
-
-        endTime = notesManager.NotesTime[notesManager.NotesTime.Count - 1];
     }
 
     void Update()
@@ -110,15 +99,22 @@ public class Judge : MonoBehaviour
         }
 
         // Miss判定
-        if (notesManager.NotesTime.Count > 0 && Time.time > notesManager.NotesTime[0] + 0.1f)
+        if (notesManager.NotesTime.Count > 0)
         {
-            message(2);
-            deleteData(0);
-            Debug.Log("Miss");
-            slider.value -= 1.0f;
+            // 理想的なヒット時刻（絶対時刻）
+            float noteIdealTime = notesManager.NotesTime[0] + musicManager.MusicStartTime;
+
+            // ノーツの理想的なヒット時刻を0.10秒過ぎたらMissとする
+            if (Time.time > noteIdealTime + 0.10f) // ★ MusicStartTime の加算を確実に行う
+            {
+                message(2); // Miss
+                deleteData(0);
+                Debug.Log("Miss (自動削除)");
+                slider.value -= 1.0f;
+            }
         }
 
-        if(Time.time > endTime)
+        if (musicManager != null && musicManager.IsPlaying && notesManager.NotesTime.Count == 0 && Time.time > endTime + musicManager.MusicStartTime + 1f)
         {
             if (slider.value<70.0f)
             {
@@ -136,25 +132,44 @@ public class Judge : MonoBehaviour
                     }
                 }
             }
-            OnGameEnd();
-            Invoke("ResultScene", 3f);
+            if (!IsGameEnded) // 新しいフラグを追加
+            {
+                OnGameEnd();
+                IsGameEnded = true;
+                Invoke("ResultScene", 3f);
+            }
             return;
         }
     }
 
     void CheckNoteHit(int lane)
     {
+        // リストの先頭から、押されたレーンと一致するノーツを探す (効率のため、先頭から数個のみチェック)
         for (int i = 0; i < notesManager.LaneNum.Count; i++)
         {
+            // 処理効率のため、一定数（例：5個）を超えたらループを抜けるのが望ましいが、ここではシンプルに
+
             if (notesManager.LaneNum[i] == lane)
             {
-                float timeLag = GetABS(Time.time - notesManager.NotesTime[i]);
+                // 理想的なヒット時間との差分を計算
+                // MusicStartTime を加算して、ノーツ生成時に計算された時刻を絶対時刻に戻す
+                float noteIdealTime = notesManager.NotesTime[i] + musicManager.MusicStartTime;
+                float timeLag = GetABS(Time.time - noteIdealTime);
 
-                if (timeLag <= 0.10f)
+                if (timeLag <= 0.10f) // 判定範囲内か確認
                 {
                     Judgement(timeLag, i, lane);
+                    return; // 判定が成功したら、すぐに終了
+                }
+                // 押されたレーンに対応するノーツが見つかったが、
+                // 判定範囲外（早すぎた）の場合は、これ以上検索する必要はない
+                else if (Time.time < noteIdealTime)
+                {
+                    Debug.Log($"レーン{lane}: 早すぎ");
+                    TriggerLaneLight(lane, 2); // 空打ち
                     return;
                 }
+                // ノーツが判定範囲を過ぎている（遅すぎた）場合は、次のノーツを探す。
             }
         }
 
@@ -164,7 +179,7 @@ public class Judge : MonoBehaviour
 
     void Judgement(float timeLag, int noteIndex, int lane)
     {
-        if (timeLag <= 0.045)
+        if (timeLag <= 0.045f)
         {
             Debug.Log("Perfect");
             message(0);
@@ -179,7 +194,7 @@ public class Judge : MonoBehaviour
             TriggerLaneLight(lane, 0);
             deleteData(noteIndex);
         }
-        else if (timeLag <= 0.10)
+        else if (timeLag <= 0.10f)
         {
             Debug.Log("OK");
             message(1);
@@ -382,5 +397,46 @@ public class Judge : MonoBehaviour
     void ResultScene()
     {
         SceneManager.LoadScene("ResultScene");
+    }
+
+    public void InitGameData()
+    {
+        if (notesManager != null && notesManager.noteNum > 0)
+        {
+            scorestandard = 1000000 / notesManager.noteNum;
+            remainderFlug = true;
+            remainder = 1000000 % notesManager.noteNum;
+            Debug.Log($"総ノーツ数: {notesManager.noteNum}, 1ノーツあたりのスコア: {scorestandard}");
+        }
+        else
+        {
+            Debug.LogError("NotesManagerが設定されていないか、ノーツ数が0です");
+            scorestandard = 0;
+            return; // ノーツがない場合はここで終了
+        }
+
+        // ノーツデータの確認後、endTimeを設定
+        if (notesManager.NotesTime.Count > 0)
+        {
+            // MusicManagerのStart()でMusicStartTimeは0に初期化されているため、
+            // ここではまだ MusicStartTime を使用せず、Update() で使用します。
+            // または、MusicManagerからEndTimeを取得する処理をUpdate()または専用メソッドで実行します。
+            // 簡単のために、今回は Update() の終了判定ロジックを変更します。
+
+            // MusicManagerの MusicStartTime を使用できるように、Judgeに MusicManager の参照があるか確認
+            if (musicManager != null)
+            {
+                // 音楽の長さ（ここでは最後のノーツの時間）に音楽のオフセットを考慮した終了時間を計算
+                endTime = notesManager.NotesTime[notesManager.NotesTime.Count - 1];
+            }
+            else
+            {
+                Debug.LogError("MusicManagerが設定されていません");
+            }
+        }
+        else
+        {
+            Debug.LogWarning("ノーツが一つもありません");
+        }
     }
 }
