@@ -12,6 +12,8 @@ public class MusicManager : MonoBehaviour
 
     [SerializeField] private Judge judge; // Judge の参照を追加
 
+    [SerializeField] SongDataBase database;
+
     // 楽曲が再生開始された時刻
     public float MusicStartTime { get; private set; }
 
@@ -23,7 +25,7 @@ public class MusicManager : MonoBehaviour
         audio = GetComponent<AudioSource>();
 
         // ハードコーディング: 曲名を直接指定
-        songName = "狂喜蘭舞";
+        songName = database.songData[SongSelect.select].songName;
 
         // 音楽ファイルを読み込み
         Music = (AudioClip)Resources.Load("Musics/" + songName);

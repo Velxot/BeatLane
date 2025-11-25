@@ -40,7 +40,7 @@ public class NotesManager : MonoBehaviour
     //ノーツのprefabを入れる
     [SerializeField] GameObject noteObj;
 
-    //[SerializeField] public float VisualOffsetZ = -5.0f;
+    [SerializeField] SongDataBase database;
 
     [SerializeField] private MusicManager musicManager;
 
@@ -52,7 +52,7 @@ public class NotesManager : MonoBehaviour
         noteNum = 0;
 
         // ハードコーディング: 譜面ファイル名を直接指定
-        songName = "狂喜蘭舞";
+        songName = database.songData[SongSelect.select].songName;
 
         Debug.Log($"譜面ファイル: {songName}");
     }

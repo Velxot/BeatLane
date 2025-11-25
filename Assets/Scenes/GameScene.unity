@@ -2589,6 +2589,7 @@ MonoBehaviour:
   NotesObj: []
   NotesSpeed: 30
   noteObj: {fileID: 7298742540482570593, guid: 4db5403b8e7b4734782441b0aa2db760, type: 3}
+  database: {fileID: 11400000, guid: f00041bc94fb1394eb31ffc3fa5e7dca, type: 2}
   musicManager: {fileID: 2112736297}
 --- !u!1 &1038434513
 GameObject:
@@ -4890,7 +4891,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.5
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -4988,6 +4989,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   notesManager: {fileID: 997821217}
   judge: {fileID: 5874696}
+  database: {fileID: 11400000, guid: f00041bc94fb1394eb31ffc3fa5e7dca, type: 2}
 --- !u!4 &2112736298
 Transform:
   m_ObjectHideFlags: 0
