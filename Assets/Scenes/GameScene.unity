@@ -4990,6 +4990,8 @@ MonoBehaviour:
   notesManager: {fileID: 997821217}
   judge: {fileID: 5874696}
   database: {fileID: 11400000, guid: f00041bc94fb1394eb31ffc3fa5e7dca, type: 2}
+  countdownText: {fileID: 1565717135}
+  StartDelaySeconds: 3
 --- !u!4 &2112736298
 Transform:
   m_ObjectHideFlags: 0
