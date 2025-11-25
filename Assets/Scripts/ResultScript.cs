@@ -32,7 +32,7 @@ public class ResultScript : MonoBehaviour
         // スタートボタンまたはEnterキー
         if ((usesController && nemsysController.GetButtonDown(8)) || Input.GetKeyDown(KeyCode.Return))
         {
-            Retry();
+            ReturnToSelect();
         }
     }
 
@@ -76,15 +76,15 @@ public class ResultScript : MonoBehaviour
         GameResultData.DebugLog();
     }
 
-    // タイトルに戻るボタン用（オプション）
-    public void ReturnToTitle()
+    // 選曲画面に戻るボタン用（オプション）
+    public void ReturnToSelect()
     {
-        SceneManager.LoadScene("TitleScene"); // タイトルシーン名を適宜変更
+        SceneManager.LoadScene("MusicSelectScene");
     }
 
     // リトライボタン用（オプション）
     public void Retry()
     {
-        SceneManager.LoadScene("GameScene"); // ゲームシーン名を適宜変更
+        SceneManager.LoadScene("GameScene");
     }
 }
