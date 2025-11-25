@@ -44,19 +44,25 @@ public class SongSelect : MonoBehaviour
     [SerializeField] private TextMeshProUGUI chartNameText; // 難易度名表示用 (例: HARD)
     [SerializeField] private TextMeshProUGUI levelText;     // 難易度レベル表示用 (例: 10)
 
-    public static int selectedChartIndex = 0;
+    public static int selectedChartIndex = 0; // 選択中の難易度インデックス (0から始まる)
 
     private int totalCharts;
+
+    bool isChartChanged;
 
     private void Start()
     {
         select = 0;
+        selectedChartIndex = 0; // 起動時にも難易度をリセット
         audio = GetComponent<AudioSource>();
-        songName = dataBase.songData[select].songName;
-        Music = (AudioClip)Resources.Load("Musics/" + songName);
-        SongUpdateALL();
 
-        UpdateChartInfo();
+        // データベースに楽曲がない場合のガード
+        if (dataBase.songData.Length > 0)
+        {
+            songName = dataBase.songData[select].songName;
+            Music = (AudioClip)Resources.Load("Musics/" + songName);
+            SongUpdateALL(); // 難易度情報もここで更新される
+        }
 
         // ツマミの初期値を取得
         if (nemsysController != null && nemsysController.IsInitialized)
@@ -70,17 +76,22 @@ public class SongSelect : MonoBehaviour
     {
         // 楽曲リストの総数
         int songCount = dataBase.songData.Length;
+        if (songCount == 0) return;
 
-        // ★ NEMSYSコントローラーのツマミ入力を処理
+        // ★ 難易度変更フラグをリセット
+        isChartChanged = false;
+
+        // ★ NEMSYSコントローラーのツマミ入力を処理 (楽曲選択と難易度選択)
         if (nemsysController != null && nemsysController.IsInitialized)
         {
             HandleKnobInput(songCount);
         }
 
-        // キーボード入力
+        // キーボード入力 (楽曲選択)
         if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             select = (select + 1) % songCount;
+            selectedChartIndex = 0; // ★ 楽曲変更時に難易度をリセット
             SEaudio.PlayOneShot(songchangeClip);
             SongUpdateALL();
 
@@ -93,6 +104,7 @@ public class SongSelect : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
             select = (select - 1 + songCount) % songCount;
+            selectedChartIndex = 0; // ★ 楽曲変更時に難易度をリセット
             SEaudio.PlayOneShot(songchangeClip);
             SongUpdateALL();
 
@@ -102,7 +114,24 @@ public class SongSelect : MonoBehaviour
             }
         }
 
-        if (Input.GetKeyDown(KeyCode.Return) || (nemsysController.GetButtonDown(8)))
+        // キーボード入力 (難易度選択)
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            selectedChartIndex--;
+            isChartChanged = true;
+        }
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            selectedChartIndex++;
+            isChartChanged = true;
+        }
+
+        // ★ 難易度変更処理 (キーボードまたはツマミ入力の結果を処理)
+        HandleChartSelectionLogic();
+
+
+        // 決定ボタン
+        if (Input.GetKeyDown(KeyCode.Return) || (nemsysController != null && nemsysController.GetButtonDown(8)))
         {
             SongStart();
         }
@@ -112,71 +141,54 @@ public class SongSelect : MonoBehaviour
         {
             SongStart();
         }
-
-        HandleChartSelectionInput();
     }
 
-    private void HandleChartSelectionInput()
+    private void HandleChartSelectionLogic()
     {
         if (dataBase.songData.Length == 0) return;
 
         SongData currentSong = dataBase.songData[select];
+
+        // availableChartsがnullでないことを確認 (Unityエディタでの設定漏れ対策)
+        if (currentSong.availableCharts == null)
+        {
+            currentSong.availableCharts = new List<ChartData>();
+        }
+
         totalCharts = currentSong.availableCharts.Count;
-        if (totalCharts <= 1) return; // 譜面が1つ以下なら切り替え不要
 
-        int currentChartIndex = selectedChartIndex;
-        bool isChartChanged = false;
-
-        // --- キーボード入力 ---
-        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        // 譜面が1つ以下なら、難易度切り替え操作は無視し、インデックスを0に固定 (ただし、totalCharts=0の場合は除く)
+        if (totalCharts <= 1)
         {
-            currentChartIndex--;
-            isChartChanged = true;
-        }
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            currentChartIndex++;
-            isChartChanged = true;
-        }
-
-        // --- コントローラーボタン入力 (例: BT-A/BT-BやFX-L/FX-R) ---
-        // どのボタンを難易度切り替えに使うかによってインデックスを調整してください
-        // 仮にボタン0とボタン1を使うとします (NEMSYSControllerInput.csを参照)
-        if (nemsysController != null && nemsysController.IsInitialized)
-        {
-            // 仮にボタン0 (左) で難易度を下げる
-            if (nemsysController.GetButtonDown(0))
+            if (selectedChartIndex != 0)
             {
-                currentChartIndex--;
-                isChartChanged = true;
+                selectedChartIndex = 0;
+                UpdateChartInfo(); // インデックスが0以外から0にリセットされたら更新
             }
-            // 仮にボタン1 (右) で難易度を上げる
-            if (nemsysController.GetButtonDown(1))
-            {
-                currentChartIndex++;
-                isChartChanged = true;
-            }
+            return;
         }
 
-        // --- 難易度インデックスのループ処理 ---
+        // ツマミまたはキーボードで変更があった場合のみ実行
         if (isChartChanged)
         {
-            // インデックスをリストの範囲内でループさせる
-            if (currentChartIndex < 0)
+            bool SEflug = true;
+            // インデックスをリストの範囲内で留まらせる
+            if (selectedChartIndex < 0)
             {
-                currentChartIndex = totalCharts - 1; // 左端から右端へ
+                selectedChartIndex = 0;
+                SEflug = false;
             }
-            else if (currentChartIndex >= totalCharts)
+            else if (selectedChartIndex >= totalCharts)
             {
-                currentChartIndex = 0; // 右端から左端へ
+                selectedChartIndex = totalCharts - 1;
+                SEflug = false;
             }
 
-            // 新しいインデックスを静的変数に保存し、UIを更新
-            selectedChartIndex = currentChartIndex;
+            // UIを更新
             UpdateChartInfo();
 
-            // 難易度変更SEを鳴らす（オプション）
-            if (SEaudio != null && songchangeClip != null)
+            // 難易度変更SEを鳴らす
+            if (SEaudio != null && songchangeClip != null && SEflug)
             {
                 SEaudio.PlayOneShot(songchangeClip);
             }
@@ -189,10 +201,18 @@ public class SongSelect : MonoBehaviour
 
         SongData currentSong = dataBase.songData[select];
 
-        // 選択中の難易度データ（ChartData）を取得
-        if (currentSong.availableCharts.Count > selectedChartIndex)
+        // availableChartsがnullでないことを確認 (安全策)
+        if (currentSong.availableCharts == null)
         {
-            ChartData currentChart = currentSong.availableCharts[selectedChartIndex];
+            currentSong.availableCharts = new List<ChartData>();
+        }
+
+        // 選択中の難易度データ（ChartData）を取得
+        // ここで selectedChartIndex が範囲外になることが問題でした。
+        if (currentSong.availableCharts.Count > selectedChartIndex && selectedChartIndex >= 0)
+        {
+            // availableChartsは SongData.cs に定義された ChartData のリストであると仮定
+            var currentChart = currentSong.availableCharts[selectedChartIndex]; // ← ★ エラーが発生した可能性のある行
 
             // UIの表示を更新
             if (chartNameText != null)
@@ -206,19 +226,19 @@ public class SongSelect : MonoBehaviour
         }
         else
         {
-            // 選択中の楽曲に設定された譜面がない場合の処理 (例: デフォルト表示)
+            // 選択中の楽曲に設定された譜面がない、またはインデックスが不正な場合の処理
             if (chartNameText != null) chartNameText.text = "NO CHART";
             if (levelText != null) levelText.text = "--";
         }
     }
 
-    // ★ ツマミ入力を処理する新しいメソッド
+    // ★ ツマミ入力を処理するメソッド
     private void HandleKnobInput(int songCount)
     {
         int currentLeftValue = nemsysController.KnobLeftValue;
         int currentRightValue = nemsysController.KnobRightValue;
 
-        // 左ツマミの処理
+        // 左ツマミの処理 (楽曲選択)
         if (useLeftKnob)
         {
             int leftDelta = currentLeftValue - previousKnobLeftValue;
@@ -237,6 +257,7 @@ public class SongSelect : MonoBehaviour
             {
                 // 右回転 → 次の曲へ
                 select = (select + 1) % songCount;
+                selectedChartIndex = 0; // ★ 楽曲変更時に難易度をリセット
                 SEaudio.PlayOneShot(songchangeClip);
                 SongUpdateALL();
 
@@ -251,6 +272,7 @@ public class SongSelect : MonoBehaviour
             {
                 // 左回転 → 前の曲へ
                 select = (select - 1 + songCount) % songCount;
+                selectedChartIndex = 0; // ★ 楽曲変更時に難易度をリセット
                 SEaudio.PlayOneShot(songchangeClip);
                 SongUpdateALL();
 
@@ -263,7 +285,7 @@ public class SongSelect : MonoBehaviour
             }
         }
 
-        // 右ツマミの処理
+        // 右ツマミの処理 (難易度選択)
         if (useRightKnob)
         {
             int rightDelta = currentRightValue - previousKnobRightValue;
@@ -278,31 +300,20 @@ public class SongSelect : MonoBehaviour
                 rightDelta += 65535;
             }
 
+
             if (rightDelta > knobThreshold)
             {
-                // 右回転 → 次の曲へ
-                select = (select + 1) % songCount;
-                SEaudio.PlayOneShot(songchangeClip);
-                SongUpdateALL();
-
-                if (downArrow != null)
-                {
-                    StartCoroutine(AnimateArrow(downArrow));
-                }
+                // 右回転 → 難易度上昇
+                selectedChartIndex++;
+                isChartChanged = true;
 
                 previousKnobRightValue = currentRightValue;
             }
             else if (rightDelta < -knobThreshold)
             {
-                // 左回転 → 前の曲へ
-                select = (select - 1 + songCount) % songCount;
-                SEaudio.PlayOneShot(songchangeClip);
-                SongUpdateALL();
-
-                if (upArrow != null)
-                {
-                    StartCoroutine(AnimateArrow(upArrow));
-                }
+                // 左回転 → 難易度減少
+                selectedChartIndex--;
+                isChartChanged = true;
 
                 previousKnobRightValue = currentRightValue;
             }
@@ -311,15 +322,25 @@ public class SongSelect : MonoBehaviour
 
     private void SongUpdateALL()
     {
+        if (dataBase.songData.Length == 0) return;
+
         songName = dataBase.songData[select].songName;
         Music = (AudioClip)Resources.Load("Musics/" + songName);
         audio.Stop();
-        audio.PlayOneShot(Music);
+
+        if (Music != null)
+        {
+            audio.PlayOneShot(Music);
+        }
 
         for (int i = 0; i < 5; i++)
         {
             SongUpdate(i - 2);
         }
+
+        // 楽曲変更時に難易度情報を更新
+        // (selectが変更された後、selectedChartIndexが0にリセットされている前提)
+        UpdateChartInfo();
     }
 
     private void SongUpdate(int id)
@@ -351,8 +372,10 @@ public class SongSelect : MonoBehaviour
 
     public void SelectChart(int chartIndex)
     {
+        // 外部からの難易度選択処理 (主にUIボタン用)
         selectedChartIndex = chartIndex;
-        // UIに選択中の譜面名などを表示するロジックをここに追加します
+        // isChartChangedをtrueにする必要はないが、範囲チェックと更新は必要
+        HandleChartSelectionLogic();
         Debug.Log($"楽曲ID: {select}, 選択された譜面インデックス: {selectedChartIndex}");
     }
 
