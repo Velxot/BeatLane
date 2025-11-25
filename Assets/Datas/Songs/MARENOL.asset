@@ -14,5 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   songID: 2
   songName: MARENOL
-  songLevel: 1
+  availableCharts:
+  - chartName: Easy
+    difficultyLevel: 5
+    chartFileName: MARENOL_Easy
+  - chartName: Normal
+    difficultyLevel: 10
+    chartFileName: MARENOL_Normal
   songImage: {fileID: 0}

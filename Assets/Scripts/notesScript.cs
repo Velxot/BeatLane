@@ -1,45 +1,45 @@
-// notesScript.cs
+ï»¿// notesScript.cs
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
 public class notes : MonoBehaviour
 {
-    // ƒm[ƒc‚ÌˆÚ“®‘¬“x (NotesManager‚©‚çİ’è‚³‚ê‚é)
+    // ãƒãƒ¼ãƒ„ã®ç§»å‹•é€Ÿåº¦ (NotesManagerã‹ã‚‰è¨­å®šã•ã‚Œã‚‹)
     public float notesSpeed = 15.0f;
 
-    // ƒm[ƒc‚ª”»’èü(Z=0)‚É“’B‚·‚é (Šy‹ÈŠJn‚©‚ç‚Ì‘Š‘Î•b”)
+    // ãƒãƒ¼ãƒ„ãŒåˆ¤å®šç·š(Z=0)ã«åˆ°é”ã™ã‚‹æ™‚åˆ» (æ¥½æ›²é–‹å§‹ã‹ã‚‰ã®ç›¸å¯¾ç§’æ•°)
     [HideInInspector] public float targetTime;
 
-    // Šy‹ÈŠJn‚ÌTime.time‚Ì’l
+    // æ¥½æ›²é–‹å§‹æ™‚ã®Time.timeã®å€¤
     [HideInInspector] public float musicStartTime;
 
-    // ƒQ[ƒ€‚ªŠJn‚³‚ê‚Ä‚¢‚é‚© (MusicManager‚©‚çİ’è‚³‚ê‚é)
+    // ã‚²ãƒ¼ãƒ ãŒé–‹å§‹ã•ã‚Œã¦ã„ã‚‹ã‹ (MusicManagerã‹ã‚‰è¨­å®šã•ã‚Œã‚‹)
     [HideInInspector] public bool isGameStarted = false;
 
-    // ”»’èƒ‰ƒCƒ“‚ÌZÀ•W (Z=0‚Æ‰¼’è)
+    // åˆ¤å®šãƒ©ã‚¤ãƒ³ã®Zåº§æ¨™ (Z=0ã¨ä»®å®š)
     private const float JUDGELINE_Z = 5.1f;
 
     void Update()
     {
-        // ƒQ[ƒ€‚ªŠJn‚³‚ê‚é‚Ü‚Åƒm[ƒc‚Í“®‚©‚µ‚Ü‚¹‚ñ
+        // ã‚²ãƒ¼ãƒ ãŒé–‹å§‹ã•ã‚Œã‚‹ã¾ã§ãƒãƒ¼ãƒ„ã¯å‹•ã‹ã—ã¾ã›ã‚“
         if (!isGameStarted) return;
 
-        // Šy‹ÈŠJn‚©‚ç‚ÌŒo‰ßŠÔ
+        // æ¥½æ›²é–‹å§‹ã‹ã‚‰ã®çµŒéæ™‚é–“
         float elapsedTime = Time.time - musicStartTime;
 
-        // ƒm[ƒc‚ª”»’èü‚É“’B‚·‚é‚Ü‚Å‚Ìc‚èŠÔ
+        // ãƒãƒ¼ãƒ„ãŒåˆ¤å®šç·šã«åˆ°é”ã™ã‚‹ã¾ã§ã®æ®‹ã‚Šæ™‚é–“
         float timeRemaining = targetTime - elapsedTime;
 
-        // ƒm[ƒc‚ÌZÀ•W‚ğŒvZ: (c‚èŠÔ) ~ (‘¬“x) + (”»’èü‚ÌZÀ•W)
-        // ƒm[ƒc‚ÍAtimeRemaining•bŒã‚É”»’èü‚É“’B‚µ‚Ü‚·B
+        // ãƒãƒ¼ãƒ„ã®Zåº§æ¨™ã‚’è¨ˆç®—: (æ®‹ã‚Šæ™‚é–“) Ã— (é€Ÿåº¦) + (åˆ¤å®šç·šã®Zåº§æ¨™)
+        // ãƒãƒ¼ãƒ„ã¯ã€timeRemainingç§’å¾Œã«åˆ¤å®šç·šã«åˆ°é”ã—ã¾ã™ã€‚
         float currentZ = timeRemaining * notesSpeed + JUDGELINE_Z;
 
-        // ƒm[ƒc‚ÌV‚µ‚¢ˆÊ’u‚ğİ’èiX, Y‚Í•ÏX‚µ‚È‚¢j
+        // ãƒãƒ¼ãƒ„ã®æ–°ã—ã„ä½ç½®ã‚’è¨­å®šï¼ˆX, Yã¯å¤‰æ›´ã—ãªã„ï¼‰
         transform.position = new Vector3(transform.position.x, transform.position.y, currentZ);
 
-        // y‹Šo“I‚ÈC³zƒm[ƒc‚ª”»’èü‚æ‚è‚àè‘O‚É—ˆ‚½‚çÁ–Å‚³‚¹‚é (Judge.cs‚ÌMiss”»’è‚Æ“¯‚Éƒm[ƒc‚ğDestroy‚·‚éˆ—‚ª‚ ‚ê‚ÎA‚±‚Ìs‚Í•s—v‚É‚È‚éê‡‚ª‚ ‚è‚Ü‚·‚ªAˆê“I‚È‹ŠoC³‚Æ‚µ‚Äc‚µ‚Ü‚·)
-        if (currentZ < JUDGELINE_Z - 0.5f) // ”»’èüZ=0‚ğ’Ê‚è‰ß‚¬‚½ê‡
+        // ã€è¦–è¦šçš„ãªä¿®æ­£ã€‘ãƒãƒ¼ãƒ„ãŒåˆ¤å®šç·šã‚ˆã‚Šã‚‚æ‰‹å‰ã«æ¥ãŸã‚‰æ¶ˆæ»…ã•ã›ã‚‹ (Judge.csã®Missåˆ¤å®šã¨åŒæ™‚ã«ãƒãƒ¼ãƒ„ã‚’Destroyã™ã‚‹å‡¦ç†ãŒã‚ã‚Œã°ã€ã“ã®è¡Œã¯ä¸è¦ã«ãªã‚‹å ´åˆãŒã‚ã‚Šã¾ã™ãŒã€ä¸€æ™‚çš„ãªè¦–è¦šä¿®æ­£ã¨ã—ã¦æ®‹ã—ã¾ã™)
+        if (currentZ < JUDGELINE_Z - 0.5f) // åˆ¤å®šç·šZ=0ã‚’é€šã‚ŠéããŸå ´åˆ
         {
             Destroy(gameObject);
         }

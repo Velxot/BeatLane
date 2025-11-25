@@ -14,5 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   songID: "\uFF14"
   songName: "\u30AB\u30CE\u30F3 \u30CB\u9577\u8ABF"
-  songLevel: 0
+  availableCharts:
+  - chartName: Easy
+    difficultyLevel: 1
+    chartFileName: "\u30AB\u30CE\u30F3 \u30CB\u9577\u8ABF_Easy"
   songImage: {fileID: 0}

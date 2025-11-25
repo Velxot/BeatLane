@@ -51,7 +51,6 @@ public class NotesManager : MonoBehaviour
         //総ノーツを0にする
         noteNum = 0;
 
-        // ハードコーディング: 譜面ファイル名を直接指定
         songName = database.songData[SongSelect.select].songName;
 
         Debug.Log($"譜面ファイル: {songName}");
@@ -60,7 +59,44 @@ public class NotesManager : MonoBehaviour
     // MusicManagerから呼び出される：ノーツを生成する
     public void GenerateNotes()
     {
-        Load(songName);
+        // 1. 選択された楽曲と譜面インデックスを取得
+        int songIndex = SongSelect.select;
+        int chartIndex = SongSelect.selectedChartIndex; // ★★★ 選択された譜面インデックスを取得
+
+        // エラーチェック
+        if (database == null || songIndex < 0 || songIndex >= database.songData.Length)
+        {
+            Debug.LogError($"SongDataBaseが不正、または楽曲ID({songIndex})が無効です。");
+            return;
+        }
+
+        SongData selectedSong = database.songData[songIndex];
+
+        if (chartIndex < 0 || chartIndex >= selectedSong.availableCharts.Count)
+        {
+            Debug.LogError($"譜面ID({chartIndex})が無効です。楽曲: {selectedSong.songName}");
+            return;
+        }
+
+        // ★★★ 2. 選択された ChartData からファイル名を取得 ★★★
+        ChartData selectedChart = selectedSong.availableCharts[chartIndex];
+        string chartFileName = selectedChart.chartFileName; // 譜面ファイル名を取得
+
+        // 既存の songName を譜面名に置き換える（もし必要なら）
+        // songName = selectedSong.songName; // 楽曲名自体はそのまま
+
+        // 3. 譜面ファイルを Resources から読み込み
+        // 既存: TextAsset json = (TextAsset)Resources.Load("Notes/" + songName);
+        // ★★★ 変更: chartFileNameを使用 ★★★
+        TextAsset json = (TextAsset)Resources.Load(chartFileName);
+
+        if (json == null)
+        {
+            Debug.LogError($"ノーツファイルが見つかりません: Resources/{chartFileName}");
+            return;
+        }
+        Load(chartFileName);
+
     }
 
     private void Load(string SongName)

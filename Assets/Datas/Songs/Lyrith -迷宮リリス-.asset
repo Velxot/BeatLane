@@ -14,5 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   songID: 1
   songName: "Lyrith -\u8FF7\u5BAE\u30EA\u30EA\u30B9-"
-  songLevel: 1
+  availableCharts:
+  - chartName: Easy
+    difficultyLevel: 1
+    chartFileName: "Lyrith -\u8FF7\u5BAE\u30EA\u30EA\u30B9-_Easy"
   songImage: {fileID: 0}
