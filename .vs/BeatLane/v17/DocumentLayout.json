@@ -3,8 +3,16 @@
   "WorkspaceRootPath": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\SongSelect.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\SongSelect.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\llghtsScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\llghtsScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\Judge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\Judge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\notesScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\notesScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\MusicManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -15,44 +23,24 @@
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\NotesManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\Judge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\Judge.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\SongSelect.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\SongSelect.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Datas\\Scripts\\SongData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Datas\\Scripts\\SongData.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Datas\\Scripts\\SongDataBase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Datas\\Scripts\\SongDataBase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\ScrollingText.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\ScrollingText.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\ResultScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\ResultScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\NEMSYSControllerInput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\NEMSYSControllerInput.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\ResultScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\ResultScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\MARENOL.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Resources\\MARENOL.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\notesScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Scripts\\notesScript.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\MusicManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Resources\\MusicManager.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\\u72C2\u559C\u862D\u821E.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Resources\\\u72C2\u559C\u862D\u821E.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Datas\\Scripts\\SongDataBase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:Assets\\Datas\\Scripts\\SongDataBase.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\ControllerCheck.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -78,11 +66,89 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "llghtsScript.cs",
+              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\llghtsScript.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\llghtsScript.cs",
+              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\llghtsScript.cs",
+              "RelativeToolTip": "Assets\\Scripts\\llghtsScript.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAD0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-26T06:18:16.154Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 5,
+              "Title": "SongSelect.cs",
+              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\SongSelect.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\SongSelect.cs",
+              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\SongSelect.cs",
+              "RelativeToolTip": "Assets\\Scripts\\SongSelect.cs",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAAALsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-25T02:07:07.184Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "NotesManager.cs",
+              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\NotesManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\NotesManager.cs",
+              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\NotesManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\NotesManager.cs",
+              "ViewState": "AgIAAIAAAAAAAAAAAAAQwIwAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-25T02:18:32.389Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "notesScript.cs",
+              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\notesScript.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\notesScript.cs",
+              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\notesScript.cs",
+              "RelativeToolTip": "Assets\\Scripts\\notesScript.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACsAAAAgAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-25T09:32:14.062Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "Judge.cs",
+              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\Judge.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\Judge.cs",
+              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\Judge.cs",
+              "RelativeToolTip": "Assets\\Scripts\\Judge.cs",
+              "ViewState": "AgIAAMIAAAAAAAAAAAAqwM0AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-25T05:36:13.114Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "MusicManager.cs",
+              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\MusicManager.cs",
+              "RelativeDocumentMoniker": "Assets\\Scripts\\MusicManager.cs",
+              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\MusicManager.cs",
+              "RelativeToolTip": "Assets\\Scripts\\MusicManager.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEkAAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-11-25T02:23:06.527Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
               "Title": "SongDataBase.cs",
               "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Datas\\Scripts\\SongDataBase.cs",
               "RelativeDocumentMoniker": "Assets\\Datas\\Scripts\\SongDataBase.cs",
@@ -94,44 +160,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Judge.cs",
-              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\Judge.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\Judge.cs",
-              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\Judge.cs",
-              "RelativeToolTip": "Assets\\Scripts\\Judge.cs",
-              "ViewState": "AgIAAHABAAAAAAAAAAAowHkBAABNAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T05:36:13.114Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "MusicManager.cs",
-              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\MusicManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\MusicManager.cs",
-              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\MusicManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\MusicManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAEkAAAAUAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T02:23:06.527Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "SongSelect.cs",
-              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\SongSelect.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\SongSelect.cs",
-              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\SongSelect.cs",
-              "RelativeToolTip": "Assets\\Scripts\\SongSelect.cs",
-              "ViewState": "AgIAADQAAAAAAAAAAAAAAFIAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T02:07:07.184Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 6,
               "Title": "SongData.cs",
               "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Datas\\Scripts\\SongData.cs",
               "RelativeDocumentMoniker": "Assets\\Datas\\Scripts\\SongData.cs",
@@ -139,35 +168,12 @@
               "RelativeToolTip": "Assets\\Datas\\Scripts\\SongData.cs",
               "ViewState": "AgIAAAkAAAAAAAAAAAAAACEAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T01:41:07.958Z"
+              "WhenOpened": "2025-11-25T01:41:07.958Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "NotesManager.cs",
-              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\NotesManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\NotesManager.cs",
-              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\NotesManager.cs",
-              "RelativeToolTip": "Assets\\Scripts\\NotesManager.cs",
-              "ViewState": "AgIAAHIAAAAAAAAAAABFwHoAAAA4AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T02:18:32.389Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
-              "Title": "MARENOL.json",
-              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\MARENOL.json",
-              "RelativeDocumentMoniker": "Assets\\Resources\\MARENOL.json",
-              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\MARENOL.json",
-              "RelativeToolTip": "Assets\\Resources\\MARENOL.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-11-25T11:44:44.771Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 7,
               "Title": "ResultScript.cs",
               "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\ResultScript.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\ResultScript.cs",
@@ -175,11 +181,12 @@
               "RelativeToolTip": "Assets\\Scripts\\ResultScript.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAAAACAAAABBAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T04:16:00.999Z"
+              "WhenOpened": "2025-11-25T04:16:00.999Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 8,
               "Title": "NEMSYSControllerInput.cs",
               "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\NEMSYSControllerInput.cs",
               "RelativeDocumentMoniker": "Assets\\Scripts\\NEMSYSControllerInput.cs",
@@ -187,58 +194,12 @@
               "RelativeToolTip": "Assets\\Scripts\\NEMSYSControllerInput.cs",
               "ViewState": "AgIAAGsAAAAAAAAAAAAiwIwAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T11:49:17.445Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "ScrollingText.cs",
-              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\ScrollingText.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\ScrollingText.cs",
-              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\ScrollingText.cs",
-              "RelativeToolTip": "Assets\\Scripts\\ScrollingText.cs",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T12:28:20.029Z"
+              "WhenOpened": "2025-11-25T11:49:17.445Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 10,
-              "Title": "notesScript.cs",
-              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\notesScript.cs",
-              "RelativeDocumentMoniker": "Assets\\Scripts\\notesScript.cs",
-              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Scripts\\notesScript.cs",
-              "RelativeToolTip": "Assets\\Scripts\\notesScript.cs",
-              "ViewState": "AgIAAA0AAAAAAAAAAAAiwBsAAAAWAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-25T09:32:14.062Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 11,
-              "Title": "MusicManager.cs",
-              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\MusicManager.cs",
-              "RelativeDocumentMoniker": "Assets\\Resources\\MusicManager.cs",
-              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\MusicManager.cs",
-              "RelativeToolTip": "Assets\\Resources\\MusicManager.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAABBAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-11-24T13:01:15.52Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 12,
-              "Title": "\u72C2\u559C\u862D\u821E.json",
-              "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\\u72C2\u559C\u862D\u821E.json",
-              "RelativeDocumentMoniker": "Assets\\Resources\\\u72C2\u559C\u862D\u821E.json",
-              "ToolTip": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\\u72C2\u559C\u862D\u821E.json",
-              "RelativeToolTip": "Assets\\Resources\\\u72C2\u559C\u862D\u821E.json",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAA8AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-11-24T15:00:18.427Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 13,
               "Title": "ControllerCheck.cs",
               "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\ControllerCheck.cs",
               "RelativeDocumentMoniker": "Assets\\Resources\\ControllerCheck.cs",
@@ -250,7 +211,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 11,
               "Title": "LaneEffect.cs",
               "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\LaneEffect.cs",
               "RelativeDocumentMoniker": "Assets\\Resources\\LaneEffect.cs",
@@ -262,7 +223,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 12,
               "Title": "llghtsScript.cs",
               "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\llghtsScript.cs",
               "RelativeDocumentMoniker": "Assets\\Resources\\llghtsScript.cs",
@@ -274,7 +235,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 13,
               "Title": "\u72C2\u559C\u4E71\u821E_easy.json",
               "DocumentMoniker": "C:\\Users\\takahashidaiki\\Desktop\\BeatLane\\BeatLane\\Assets\\Resources\\\u72C2\u559C\u4E71\u821E_easy.json",
               "RelativeDocumentMoniker": "Assets\\Resources\\\u72C2\u559C\u4E71\u821E_easy.json",

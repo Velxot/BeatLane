@@ -18,6 +18,8 @@ public class SongSelect : MonoBehaviour
     // ★ 矢印関連のフィールド
     [SerializeField] Image upArrow;
     [SerializeField] Image downArrow;
+    [SerializeField] Image leftArrow;
+    [SerializeField] Image rightArrow;
 
     // ★ アニメーション用のフィールド
     [Header("Arrow Animation Settings")]

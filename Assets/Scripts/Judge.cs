@@ -27,6 +27,8 @@ public class Judge : MonoBehaviour
     [SerializeField] private RectTransform percentTextRect;
     [SerializeField] private float gaugeTextOffset = 10f;
 
+    public GameObject[] allLanes = new GameObject[8];
+
     float endTime = 0f;
     int laneposition;
     bool IsGameEnded = false;
@@ -40,6 +42,8 @@ public class Judge : MonoBehaviour
         slider.value = 0f;
         laneposition = 2;
         judgedNotesCount = 0;
+
+        activateLane();
     }
 
     void Update()
@@ -79,11 +83,13 @@ public class Judge : MonoBehaviour
         if (laneposition > 0 && ((usesController && nemsysController.GetButtonDown(4)) || Input.GetKeyDown(KeyCode.E)))
         {
             laneposition--;
+            activateLane();
         }
 
         if (laneposition < 4 && ((usesController && nemsysController.GetButtonDown(5)) || Input.GetKeyDown(KeyCode.I)))
         {
             laneposition++;
+            activateLane();
         }
 
         // Miss”»’è
@@ -200,6 +206,21 @@ public class Judge : MonoBehaviour
             deleteData(noteIndex);
             judgedNotesCount++; // OKŽž‚àƒJƒEƒ“ƒg
             Debug.Log($"OK - ”»’èÏ‚Ý: {judgedNotesCount}/{notesManager.noteNum}");
+        }
+    }
+
+    void activateLane()
+    {
+        for(int i = 0; i < 8; i++)
+        {
+            if(laneposition<=i && i < laneposition + 4)
+            {
+                allLanes[i].SetActive(true);
+            }
+            else
+            {
+                allLanes[i].SetActive(false);
+            }
         }
     }
 
