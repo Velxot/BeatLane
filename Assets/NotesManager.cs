@@ -40,6 +40,8 @@ public class NotesManager : MonoBehaviour
     //ノーツのprefabを入れる
     [SerializeField] GameObject noteObj;
 
+    [SerializeField] private LongNotesManager longNotesManager;
+
     [SerializeField] SongDataBase database;
 
     [SerializeField] private MusicManager musicManager;
@@ -96,7 +98,15 @@ public class NotesManager : MonoBehaviour
             return;
         }
         Load(chartFileName);
-
+        if (longNotesManager != null)
+        {
+            // 既存の NotesManager.cs の GenerateNotes メソッド内で Load が呼ばれた後に実行
+            longNotesManager.GenerateLongNotes(chartFileName);
+        }
+        else
+        {
+            Debug.LogError("LongNotesManagerがNotesManagerに設定されていません。");
+        }
     }
 
     private void Load(string SongName)
@@ -106,38 +116,51 @@ public class NotesManager : MonoBehaviour
         Data inputJson = JsonUtility.FromJson<Data>(inputString);
 
         //総ノーツ数を設定
-        noteNum = inputJson.notes.Length;
+        //noteNum = inputJson.notes.Length;
+
+        // ノーツ情報を一旦クリア
+        NotesTime.Clear();
+        LaneNum.Clear();
+        NoteType.Clear();
+        NotesObj.Clear();
+        noteNum = 0; // ノーツ総数をリセット
 
         for (int i = 0; i < inputJson.notes.Length; i++)
         {
-            //時間を計算
-            float kankaku = 60 / (inputJson.BPM * (float)inputJson.notes[i].LPB);
-            float beatSec = kankaku * (float)inputJson.notes[i].LPB;
-            float time = (beatSec * inputJson.notes[i].num / (float)inputJson.notes[i].LPB) + inputJson.offset * 0.01f;
-
-            //リストに追加
-            NotesTime.Add(time);
-            LaneNum.Add(inputJson.notes[i].block);
-            NoteType.Add(inputJson.notes[i].type);
-
-            float z_initial = time * NotesSpeed + JUDGELINE_Z;
-
-            //ノーツを生成
-            GameObject newNote = Instantiate(noteObj, new Vector3(inputJson.notes[i].block * 2 - 7.0f, 0.55f, z_initial), Quaternion.identity);
-
-            // NotesManagerのNotesSpeedをノーツの移動スクリプトに設定
-            notes notesComponent = newNote.GetComponent<notes>();
-            if (notesComponent != null)
+            // ★★★ 追加: typeが1（通常ノーツ）の場合のみ処理を行う ★★★
+            if (inputJson.notes[i].type == 1 && inputJson.notes[i].block<8)
             {
-                notesComponent.notesSpeed = NotesSpeed;
-                notesComponent.targetTime = time;
-                NotesObj.Add(newNote);
-            }
+                //時間を計算
+                float kankaku = 60 / (inputJson.BPM * (float)inputJson.notes[i].LPB);
+                float beatSec = kankaku * (float)inputJson.notes[i].LPB;
+                float time = (beatSec * inputJson.notes[i].num / (float)inputJson.notes[i].LPB) + inputJson.offset * 0.01f;
 
-            NotesObj.Add(newNote);
+                //リストに追加
+                NotesTime.Add(time);
+                LaneNum.Add(inputJson.notes[i].block);
+                NoteType.Add(inputJson.notes[i].type);
+
+                float z_initial = time * NotesSpeed + JUDGELINE_Z;
+
+                //ノーツを生成
+                // 通常ノーツのプレハブを使用
+                GameObject newNote = Instantiate(noteObj, new Vector3(inputJson.notes[i].block * 2 - 7.0f, 0.55f, z_initial), Quaternion.identity);
+
+                // NotesManagerのNotesSpeedをノーツの移動スクリプトに設定
+                notes notesComponent = newNote.GetComponent<notes>();
+                if (notesComponent != null)
+                {
+                    notesComponent.notesSpeed = NotesSpeed;
+                    notesComponent.targetTime = time;
+                    NotesObj.Add(newNote);
+                }
+
+                noteNum++; // 生成した通常ノーツをカウント
+            }
+            // typeが2以上のノーツは、新しいスクリプトで処理するためにここではスキップ
         }
 
-        Debug.Log($"ノーツ生成完了: {noteNum}個");
+        Debug.Log($"通常ノーツ生成完了: {noteNum}個");
     }
 
     public float GetMusicEndTime(float musicStartTime)

@@ -2,6 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic; // Dictionaryを使うために追加
 
 public class Judge : MonoBehaviour
 {
@@ -11,6 +12,9 @@ public class Judge : MonoBehaviour
     [SerializeField] private lightsScript[] laneLights;
     [SerializeField] private NEMSYSControllerInput nemsysController;
     [SerializeField] private MusicManager musicManager;
+
+    // ★★★ 追加: LongNotesManagerの参照 ★★★
+    [SerializeField] private LongNotesManager longNotesManager;
 
     int[] judgecnt = { 0, 0, 0, 0 };
     int score = 0;
@@ -33,8 +37,15 @@ public class Judge : MonoBehaviour
     int laneposition;
     bool IsGameEnded = false;
 
-    // 判定されたノーツの総数
+    // 判定されたノーツの総数 (通常ノーツのPerfect/OK/Miss + ロングノーツの開始/終了のPerfect/OK/Miss)
     private int judgedNotesCount = 0;
+
+    // ★★★ 追加: ロングノーツの状態追跡 ★★★
+    // Key: レーン番号, Value: 押されているLongNoteオブジェクト
+    private Dictionary<int, GameObject> activeLongNotes = new Dictionary<int, GameObject>();
+
+    // 内部用の判定タイプ定義
+    enum JudgementType { Start, Release }
 
     void Start()
     {
@@ -42,6 +53,7 @@ public class Judge : MonoBehaviour
         slider.value = 0f;
         laneposition = 2;
         judgedNotesCount = 0;
+        activeLongNotes.Clear();
 
         activateLane();
     }
@@ -51,34 +63,37 @@ public class Judge : MonoBehaviour
         UpdateScoreDisplay();
         UpdateGaugeTextPosition();
 
-        if (notesManager == null || notesManager.NotesTime.Count == 0)
-        {
-            // ノーツがすべて判定された場合の終了処理
-            CheckGameEnd();
-            return;
-        }
+        // ノーツがすべて判定された場合の終了処理
+        CheckGameEnd();
+
+        if (IsGameEnded) return;
 
         bool usesController = nemsysController != null && nemsysController.IsInitialized;
 
+        // ★★★ 押し始め・通常ノーツのタップ判定 (GetButtonDown) ★★★
         if ((usesController && nemsysController.GetButtonDown(0)) || Input.GetKeyDown(KeyCode.S))
         {
             CheckNoteHit(laneposition);
         }
-
         if ((usesController && nemsysController.GetButtonDown(1)) || Input.GetKeyDown(KeyCode.F))
         {
             CheckNoteHit(laneposition + 1);
         }
-
         if ((usesController && nemsysController.GetButtonDown(2)) || Input.GetKeyDown(KeyCode.J))
         {
             CheckNoteHit(laneposition + 2);
         }
-
         if ((usesController && nemsysController.GetButtonDown(3)) || Input.GetKeyDown(KeyCode.L))
         {
             CheckNoteHit(laneposition + 3);
         }
+
+        // ★★★ ロングノーツの押し終わり判定 (GetButtonUp) ★★★
+        CheckLongNoteReleaseInput(0, KeyCode.S, usesController, nemsysController);
+        CheckLongNoteReleaseInput(1, KeyCode.F, usesController, nemsysController);
+        CheckLongNoteReleaseInput(2, KeyCode.J, usesController, nemsysController);
+        CheckLongNoteReleaseInput(3, KeyCode.L, usesController, nemsysController);
+
 
         if (laneposition > 0 && ((usesController && nemsysController.GetButtonDown(4)) || Input.GetKeyDown(KeyCode.E)))
         {
@@ -93,28 +108,118 @@ public class Judge : MonoBehaviour
         }
 
         // Miss判定
+        HandleNormalNoteMiss();
+        HandleLongNoteHoldMiss();
+    }
+
+    // ★★★ 新規メソッド: ロングノーツの押し終わり入力チェック ★★★
+    void CheckLongNoteReleaseInput(int buttonIndex, KeyCode keyCode, bool usesController, NEMSYSControllerInput controller)
+    {
+        int lane = laneposition + buttonIndex;
+
+        if (activeLongNotes.ContainsKey(lane))
+        {
+            bool released = (usesController && controller.GetButtonUp(buttonIndex)) || Input.GetKeyUp(keyCode);
+
+            if (released)
+            {
+                CheckLongNoteRelease(lane);
+            }
+        }
+    }
+
+    // ★★★ 修正: 通常ノーツのMiss判定をメソッドに切り出し ★★★
+    void HandleNormalNoteMiss()
+    {
         if (notesManager.NotesTime.Count > 0)
         {
             float noteIdealTime = notesManager.NotesTime[0] + musicManager.MusicStartTime;
 
             if (Time.time > noteIdealTime + 0.10f)
             {
-                message(2);
-                deleteData(0);
-                judgedNotesCount++; // Miss時もカウント
-                Debug.Log($"Miss (自動削除) - 判定済み: {judgedNotesCount}/{notesManager.noteNum}");
+                message(2); // Miss
+                deleteData(0); // 通常ノーツを削除
+                judgedNotesCount++;
+                Debug.Log($"Miss (自動削除) - 判定済み通常ノーツ: {judgedNotesCount}");
                 slider.value -= 1.0f;
             }
         }
     }
+
+    // ★★★ 新規メソッド: ロングノーツのホールド中及び終了後のMiss判定/自動削除 ★★★
+    void HandleLongNoteHoldMiss()
+    {
+        if (longNotesManager == null) return;
+
+        // 1. 自動Miss（押し始めを逃した場合）
+        if (longNotesManager.LongNotesObj.Count > 0)
+        {
+            // NotesManagerと同様に、常にリストの先頭を次のノーツとしてチェック
+            GameObject firstLongNoteObj = longNotesManager.LongNotesObj[0];
+            LongNote firstLongNote = firstLongNoteObj.GetComponent<LongNote>();
+
+            // まだホールドされていないロングノーツの判定時間を過ぎた場合
+            if (firstLongNote != null && !activeLongNotes.ContainsValue(firstLongNoteObj))
+            {
+                float noteIdealTime = firstLongNote.startTargetTime + musicManager.MusicStartTime;
+
+                // 押し始めの受付期間を過ぎた場合 (通常ノーツと同じ0.10fを超過)
+                if (Time.time > noteIdealTime + 0.10f)
+                {
+                    message(2); // Miss
+                    DeleteLongNoteData(firstLongNoteObj, 0); // ロングノーツを削除
+                    judgedNotesCount++; // 押し始めのMissとしてカウント
+                    Debug.Log($"Long Note Start Miss (自動削除) - 判定済み: {judgedNotesCount}");
+                    slider.value -= 1.0f;
+                }
+            }
+        }
+
+        // 2. 終点時間チェック（押しっぱなしが長すぎた場合 -> 自動Perfect/OKで終了）
+        List<int> lanesToRelease = new List<int>();
+        foreach (var pair in activeLongNotes)
+        {
+            int lane = pair.Key;
+            GameObject longNoteObj = pair.Value;
+            LongNote longNote = longNoteObj.GetComponent<LongNote>();
+
+            if (longNote == null)
+            {
+                lanesToRelease.Add(lane);
+                continue;
+            }
+
+            float musicCurrentTime = Time.time - musicManager.MusicStartTime;
+            float endTargetTime = longNote.endTargetTime;
+
+            // 終点時間を過ぎた場合（0.10fの猶予期間込み）
+            if (musicCurrentTime > endTargetTime + 0.10f)
+            {
+                // Perfect/OK判定として処理し、ホールド終了
+                // timeLag=0.0fとしてPerfect相当で処理
+                LongNoteJudgement(longNoteObj, JudgementType.Release, 0.0f, lane);
+                lanesToRelease.Add(lane);
+            }
+        }
+
+        foreach (int lane in lanesToRelease)
+        {
+            activeLongNotes.Remove(lane);
+        }
+    }
+
 
     // ゲーム終了チェック（すべてのノーツが判定されたか）
     void CheckGameEnd()
     {
         if (IsGameEnded) return;
 
+        // ノーツ総数を計算 (通常ノーツ + ロングノーツの開始/終了の2回)
+        int totalNotesCount = (notesManager != null ? notesManager.noteNum : 0) +
+                              (longNotesManager != null ? longNotesManager.longNoteCount * 2 : 0);
+
         // すべてのノーツが判定され、かつ少し時間が経過した場合
-        if (musicManager.IsPlaying && judgedNotesCount >= notesManager.noteNum && Time.time > endTime + musicManager.MusicStartTime + 1f)
+        if (musicManager.IsPlaying && judgedNotesCount >= totalNotesCount && Time.time > endTime + musicManager.MusicStartTime + 1f)
         {
             // クリア判定
             if (slider.value < 70.0f)
@@ -131,7 +236,7 @@ public class Judge : MonoBehaviour
                     MessageObj[6].text = "FULL COMBO";
 
                     // オールパーフェクト判定
-                    if (judgecnt[0] == notesManager.noteNum)
+                    if (judgecnt[0] == totalNotesCount)
                     {
                         MessageObj[6].text = "ALL PERFECT";
                     }
@@ -144,8 +249,18 @@ public class Judge : MonoBehaviour
         }
     }
 
+    // ★★★ 修正: CheckNoteHit (ロングノーツの押し始めを判定に追加) ★★★
     void CheckNoteHit(int lane)
     {
+        // 既にそのレーンでロングノーツをホールド中の場合は、空打ちとして扱う
+        if (activeLongNotes.ContainsKey(lane))
+        {
+            Debug.Log($"レーン{lane}: ロングノーツホールド中の誤入力");
+            TriggerLaneLight(lane, 2);
+            return;
+        }
+
+        // 1. 通常ノーツ (type:1) の判定 (NotesManagerにtype:1のみが格納されている前提)
         for (int i = 0; i < notesManager.LaneNum.Count; i++)
         {
             if (notesManager.LaneNum[i] == lane)
@@ -155,15 +270,30 @@ public class Judge : MonoBehaviour
 
                 if (timeLag <= 0.10f)
                 {
-                    Judgement(timeLag, i, lane);
+                    Judgement(timeLag, i, lane); // 通常ノーツ判定
                     return;
                 }
                 else if (Time.time < noteIdealTime)
                 {
-                    Debug.Log($"レーン{lane}: 早すぎ");
+                    Debug.Log($"レーン{lane}: 早すぎ（通常ノーツ）");
                     TriggerLaneLight(lane, 2);
                     return;
                 }
+            }
+        }
+
+        // 2. ロングノーツ (type:2) の押し始め判定
+        if (longNotesManager != null && longNotesManager.LongNotesObj.Count > 0)
+        {
+            // NotesManagerと同様に、先頭ノーツが次に判定されるべきノーツ
+            GameObject firstLongNoteObj = longNotesManager.LongNotesObj[0];
+            LongNote firstLongNote = firstLongNoteObj.GetComponent<LongNote>();
+
+            // 先頭のロングノーツが該当レーンのものであれば判定
+            if (firstLongNote != null && firstLongNote.lane == lane)
+            {
+                CheckLongNoteHit(firstLongNoteObj, lane); // ロングノーツの押し始め判定
+                return;
             }
         }
 
@@ -171,6 +301,113 @@ public class Judge : MonoBehaviour
         TriggerLaneLight(lane, 2);
     }
 
+    // ★★★ 新規メソッド: ロングノーツの押し始め判定 (Start) ★★★
+    void CheckLongNoteHit(GameObject longNoteObj, int lane)
+    {
+        LongNote longNote = longNoteObj.GetComponent<LongNote>();
+        if (longNote == null) return;
+
+        float noteIdealTime = longNote.startTargetTime + musicManager.MusicStartTime;
+        float timeLag = GetABS(Time.time - noteIdealTime);
+
+        if (timeLag <= 0.10f)
+        {
+            // Perfect/OK判定
+            LongNoteJudgement(longNoteObj, JudgementType.Start, timeLag, lane);
+
+            // 判定成功: LongNotesManagerのリストからノーツを削除し、ホールド状態に移行
+            // LongNotesManagerのリストから削除する代わりに、アクティブリストに追加する
+            activeLongNotes.Add(lane, longNoteObj);
+
+            // NotesManagerと異なり、LongNotesManagerのリストからは、ここでは**削除しない**。
+            // 削除は終点判定またはMiss時まで保持
+        }
+        else if (Time.time < noteIdealTime)
+        {
+            Debug.Log($"レーン{lane}: 早すぎ（ロングノーツ）");
+            TriggerLaneLight(lane, 2);
+        }
+    }
+
+    // ★★★ 新規メソッド: ロングノーツの押し終わり判定 (Release) ★★★
+    void CheckLongNoteRelease(int lane)
+    {
+        if (!activeLongNotes.TryGetValue(lane, out GameObject longNoteObj))
+        {
+            return;
+        }
+
+        LongNote longNote = longNoteObj.GetComponent<LongNote>();
+        if (longNote == null)
+        {
+            activeLongNotes.Remove(lane);
+            return;
+        }
+
+        float noteIdealTime = longNote.endTargetTime + musicManager.MusicStartTime;
+        float timeLag = GetABS(Time.time - noteIdealTime);
+
+        // 終点判定の許容範囲 (例: 0.10f)
+        if (timeLag <= 0.10f)
+        {
+            // Perfect/OK判定
+            LongNoteJudgement(longNoteObj, JudgementType.Release, timeLag, lane);
+        }
+        else
+        {
+            // Miss 判定 (早すぎる/遅すぎるリリース)
+            Debug.Log($"Long Note Release Miss - TimeLag: {timeLag:F3}");
+            message(2); // Miss
+            slider.value -= 1.0f;
+            TriggerLaneLight(lane, 2);
+            judgedNotesCount++; // 押し終わりのMissとしてカウント
+        }
+
+        // 判定が成功/失敗にかかわらず、ホールド状態を解除し、ノーツを削除
+        activeLongNotes.Remove(lane);
+        DeleteLongNoteData(longNoteObj);
+    }
+
+    // ★★★ 新規メソッド: ロングノーツの判定処理 ★★★
+    void LongNoteJudgement(GameObject longNoteObj, JudgementType type, float timeLag, int lane)
+    {
+        bool isPerfect = timeLag <= 0.045f;
+        float scoreValue = 1.5f;
+
+        if (isPerfect)
+        {
+            Debug.Log($"Long Note {(type == JudgementType.Start ? "Start" : "Release")} Perfect");
+            message(0);
+            addScore(0);
+            slider.value += scoreValue;
+
+            if (judgeSoundSource != null && perfectClip != null)
+            {
+                judgeSoundSource.PlayOneShot(perfectClip);
+            }
+
+            TriggerLaneLight(lane, 0);
+        }
+        else // OK判定
+        {
+            Debug.Log($"Long Note {(type == JudgementType.Start ? "Start" : "Release")} OK");
+            message(1);
+            addScore(1);
+            slider.value += scoreValue;
+
+            if (judgeSoundSource != null && okClip != null)
+            {
+                judgeSoundSource.PlayOneShot(okClip);
+            }
+
+            TriggerLaneLight(lane, 1);
+        }
+
+        judgedNotesCount++;
+        Debug.Log($"Long Note {(type == JudgementType.Start ? "Start" : "Release")} - 判定済み: {judgedNotesCount}");
+    }
+
+    // 通常ノーツの判定処理
     void Judgement(float timeLag, int noteIndex, int lane)
     {
         if (timeLag <= 0.045f)
@@ -187,8 +424,8 @@ public class Judge : MonoBehaviour
 
             TriggerLaneLight(lane, 0);
             deleteData(noteIndex);
-            judgedNotesCount++; // Perfect時もカウント
-            Debug.Log($"Perfect - 判定済み: {judgedNotesCount}/{notesManager.noteNum}");
+            judgedNotesCount++;
+            Debug.Log($"Perfect - 判定済み: {judgedNotesCount}");
         }
         else if (timeLag <= 0.10f)
         {
@@ -204,16 +441,16 @@ public class Judge : MonoBehaviour
 
             TriggerLaneLight(lane, 1);
             deleteData(noteIndex);
-            judgedNotesCount++; // OK時もカウント
-            Debug.Log($"OK - 判定済み: {judgedNotesCount}/{notesManager.noteNum}");
+            judgedNotesCount++;
+            Debug.Log($"OK - 判定済み: {judgedNotesCount}");
         }
     }
 
     void activateLane()
     {
-        for(int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
         {
-            if(laneposition<=i && i < laneposition + 4)
+            if (laneposition <= i && i < laneposition + 4)
             {
                 allLanes[i].SetActive(true);
             }
@@ -241,6 +478,7 @@ public class Judge : MonoBehaviour
         return num >= 0 ? num : -num;
     }
 
+    // 通常ノーツのデータ削除
     void deleteData(int index)
     {
         notesManager.NotesTime.RemoveAt(index);
@@ -252,6 +490,23 @@ public class Judge : MonoBehaviour
             Destroy(notesManager.NotesObj[index]);
             notesManager.NotesObj.RemoveAt(index);
         }
+    }
+
+    // ★★★ 新規メソッド: ロングノーツのデータ削除 ★★★
+    void DeleteLongNoteData(GameObject longNoteObj, int index = -1)
+    {
+        if (longNotesManager == null) return;
+
+        // LongNotesManagerのリストからノーツを削除
+        // 通常は先頭のノーツが判定されるため、index=0で削除を試みる
+        int actualIndex = (index == -1) ? longNotesManager.LongNotesObj.IndexOf(longNoteObj) : index;
+
+        if (actualIndex >= 0 && actualIndex < longNotesManager.LongNotesObj.Count && longNotesManager.LongNotesObj[actualIndex] == longNoteObj)
+        {
+            longNotesManager.LongNotesObj.RemoveAt(actualIndex);
+        }
+
+        Destroy(longNoteObj);
     }
 
     void message(int judge)
@@ -295,6 +550,7 @@ public class Judge : MonoBehaviour
         }
         else if (judge == 1)
         {
+            // OK判定は Perfect の 3/4 のスコア
             score += scorestandard * 3 / 4;
         }
 
@@ -404,37 +660,48 @@ public class Judge : MonoBehaviour
         SceneManager.LoadScene("ResultScene");
     }
 
+    // ★★★ 修正: InitGameData (ロングノーツの総数を含めてスコア計算) ★★★
     public void InitGameData()
     {
-        if (notesManager != null && notesManager.noteNum > 0)
+        // ロングノーツは「開始」と「終了」の2回判定されるため、総ノーツ数を (通常ノーツ数 + ロングノーツ数 * 2) で計算
+        int totalNotes = (notesManager != null ? notesManager.noteNum : 0) +
+                         (longNotesManager != null ? longNotesManager.longNoteCount * 2 : 0);
+
+        if (totalNotes > 0)
         {
-            scorestandard = 1000000 / notesManager.noteNum;
+            scorestandard = 1000000 / totalNotes;
             remainderFlug = true;
-            remainder = 1000000 % notesManager.noteNum;
-            Debug.Log($"総ノーツ数: {notesManager.noteNum}, 1ノーツあたりのスコア: {scorestandard}");
+            remainder = 1000000 % totalNotes;
+
+            Debug.Log($"総判定回数: {totalNotes}, 1判定あたりのスコア: {scorestandard}");
         }
         else
         {
-            Debug.LogError("NotesManagerが設定されていないか、ノーツ数が0です");
+            Debug.LogError("ノーツマネージャが設定されていないか、ノーツ数が0です");
             scorestandard = 0;
             return;
         }
 
-        if (notesManager.NotesTime.Count > 0)
+        // 終了時間の計算 (NotesManagerとLongNotesManagerの最終ノーツを比較)
+        float normalNoteEndTime = (notesManager != null && notesManager.NotesTime.Count > 0) ? notesManager.NotesTime[notesManager.NotesTime.Count - 1] : 0f;
+
+        float longNoteEndTime = 0f;
+        if (longNotesManager != null && longNotesManager.LongNotesObj.Count > 0)
         {
-            if (musicManager != null)
+            LongNote lastLongNote = longNotesManager.LongNotesObj[longNotesManager.LongNotesObj.Count - 1].GetComponent<LongNote>();
+            if (lastLongNote != null)
             {
-                endTime = notesManager.NotesTime[notesManager.NotesTime.Count - 1];
-                Debug.Log($"楽曲終了時間: {endTime}秒");
-            }
-            else
-            {
-                Debug.LogError("MusicManagerが設定されていません");
+                // ロングノーツの終了時間を使用
+                longNoteEndTime = lastLongNote.endTargetTime;
             }
         }
-        else
+
+        endTime = Mathf.Max(normalNoteEndTime, longNoteEndTime);
+
+        if (musicManager == null)
         {
-            Debug.LogWarning("ノーツが一つもありません");
+            Debug.LogError("MusicManagerが設定されていません");
         }
+        Debug.Log($"楽曲終了時間: {endTime}秒");
     }
 }

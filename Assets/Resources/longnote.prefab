@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3437840137448233232}
   - component: {fileID: 769046818160610966}
   - component: {fileID: 3343875202211524098}
-  - component: {fileID: 5361827958454895355}
+  - component: {fileID: 1729386747026451300}
   m_Layer: 0
   m_Name: longnote
   m_TagString: Untagged
@@ -109,7 +109,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &5361827958454895355
+--- !u!114 &1729386747026451300
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -118,12 +118,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 5785370834031379199}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 264c4275f0574d3488ebcac20066ef01, type: 3}
+  m_Script: {fileID: 11500000, guid: adf3a92d706574a46852fe8a527eb438, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  notesSpeed: 1
-  targetTime: 0
+  notesSpeed: 15
+  startTargetTime: 0
+  endTargetTime: 0
+  lane: 0
   musicStartTime: 0
   isGameStarted: 0
-  noteType: 1
-  laneBlock: 0
