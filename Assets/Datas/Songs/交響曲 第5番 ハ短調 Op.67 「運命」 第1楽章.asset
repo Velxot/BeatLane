@@ -19,6 +19,6 @@ MonoBehaviour:
   availableCharts:
   - chartName: Easy
     difficultyLevel: 1
-    chartFileName: "\u4EA4\u97FF\u66F2 \u7B2C5\u756A \u30CF\u77ED\u8ABF Op.67 \u300C\u904B\u547D\u300D
-      \u7B2C1\u697D\u7AE0_Easy"
+    chartFileName: "Scores/\u4EA4\u97FF\u66F2 \u7B2C5\u756A \u30CF\u77ED\u8ABF Op.67
+      \u300C\u904B\u547D\u300D \u7B2C1\u697D\u7AE0_Easy"
   songImage: {fileID: 0}

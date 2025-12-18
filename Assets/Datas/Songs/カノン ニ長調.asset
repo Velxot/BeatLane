@@ -17,5 +17,5 @@ MonoBehaviour:
   availableCharts:
   - chartName: Easy
     difficultyLevel: 1
-    chartFileName: "\u30AB\u30CE\u30F3 \u30CB\u9577\u8ABF_Easy"
+    chartFileName: "Scores/\u30AB\u30CE\u30F3 \u30CB\u9577\u8ABF_Easy"
   songImage: {fileID: 0}

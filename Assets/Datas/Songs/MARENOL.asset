@@ -17,8 +17,8 @@ MonoBehaviour:
   availableCharts:
   - chartName: Easy
     difficultyLevel: 5
-    chartFileName: MARENOL_Easy
+    chartFileName: Scores/MARENOL_Easy
   - chartName: Normal
     difficultyLevel: 10
-    chartFileName: MARENOL_Normal
+    chartFileName: Scores/MARENOL_Normal
   songImage: {fileID: 21300000, guid: 79e5cccc250814b4abbb3895498a0d40, type: 3}

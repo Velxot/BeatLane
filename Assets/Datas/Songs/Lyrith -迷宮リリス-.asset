@@ -17,5 +17,5 @@ MonoBehaviour:
   availableCharts:
   - chartName: Easy
     difficultyLevel: 1
-    chartFileName: "Lyrith -\u8FF7\u5BAE\u30EA\u30EA\u30B9-_Easy"
+    chartFileName: "Scores/Lyrith -\u8FF7\u5BAE\u30EA\u30EA\u30B9-_Easy"
   songImage: {fileID: 21300000, guid: c3216b06548e7a64a86539906d82aa4d, type: 3}
