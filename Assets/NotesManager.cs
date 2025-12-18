@@ -5,70 +5,69 @@ using UnityEngine;
 [Serializable]
 public class Data
 {
-    public string name;  // ‹È–¼
-    public int maxBlock; // Å‘åƒuƒƒbƒN”
-    public int BPM;      // BPMi‹È‚Ìƒeƒ“ƒ|j
-    public int offset;   // ŠJnƒ^ƒCƒ~ƒ“ƒO‚ÌƒIƒtƒZƒbƒg
-    public Note[] notes; // ƒm[ƒcî•ñ‚ÌƒŠƒXƒg
+    public string name;  // ï¿½È–ï¿½
+    public int maxBlock; // ï¿½Å‘ï¿½uï¿½ï¿½ï¿½bï¿½Nï¿½ï¿½
+    public int BPM;      // BPMï¿½iï¿½È‚Ìƒeï¿½ï¿½ï¿½|ï¿½j
+    public int offset;   // ï¿½Jï¿½nï¿½^ï¿½Cï¿½~ï¿½ï¿½ï¿½Oï¿½ÌƒIï¿½tï¿½Zï¿½bï¿½g
+    public Note[] notes; // ï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½Ìƒï¿½ï¿½Xï¿½g
 }
 
 [Serializable]
 public class Note
 {
-    public int type;  // ƒm[ƒc‚Ìí—Şi’Êíƒm[ƒcEƒƒ“ƒOƒm[ƒc‚È‚Çj
-    public int num;   // ‰½”–Ú‚É”z’u‚³‚ê‚é‚©
-    public int block; // ‚Ç‚ÌƒŒ[ƒ“‚É”z’u‚³‚ê‚é‚©
-    public int LPB;   // 1”‚ ‚½‚è‚Ì•ªŠ„”
+    public int type;  // ï¿½mï¿½[ï¿½cï¿½Ìï¿½Şiï¿½Êï¿½mï¿½[ï¿½cï¿½Eï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½mï¿½[ï¿½cï¿½È‚Çj
+    public int num;   // ï¿½ï¿½ï¿½ï¿½ï¿½Ú‚É”zï¿½uï¿½ï¿½ï¿½ï¿½é‚©
+    public int block; // ï¿½Ç‚Ìƒï¿½ï¿½[ï¿½ï¿½ï¿½É”zï¿½uï¿½ï¿½ï¿½ï¿½é‚©
+    public int LPB;   // 1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½
 }
 
 public class NotesManager : MonoBehaviour
 {
-    //‘ƒm[ƒc”
+    //ï¿½ï¿½ï¿½mï¿½[ï¿½cï¿½ï¿½
     public int noteNum;
-    //‹È–¼
+    //ï¿½È–ï¿½
     private string songName;
-    //ƒm[ƒc‚ÌƒŒ[ƒ“
+    //ï¿½mï¿½[ï¿½cï¿½Ìƒï¿½ï¿½[ï¿½ï¿½
     public List<int> LaneNum = new List<int>();
-    //ƒm[ƒc‚Ìí—Ş
+    //ï¿½mï¿½[ï¿½cï¿½Ìï¿½ï¿½
     public List<int> NoteType = new List<int>();
-    //ƒm[ƒc‚ª”»’èü‚Æd‚È‚éŠÔ
+    //ï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ædï¿½È‚éï¿½ï¿½
     public List<float> NotesTime = new List<float>();
     //gameobject
     public List<GameObject> NotesObj = new List<GameObject>();
-    //ƒm[ƒc‚Ì‘¬“x
+    //ï¿½mï¿½[ï¿½cï¿½Ì‘ï¿½ï¿½x
     [SerializeField] public float NotesSpeed;
-    //ƒm[ƒc‚Ìprefab‚ğ“ü‚ê‚é
+    //ï¿½mï¿½[ï¿½cï¿½ï¿½prefabï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     [SerializeField] GameObject noteObj;
 
-    [SerializeField] private LongNotesManager longNotesManager;
-
+    
     [SerializeField] SongDataBase database;
 
     [SerializeField] private MusicManager musicManager;
 
-    private const float JUDGELINE_Z = 5.1f; // ’è‹`‚ğ’Ç‰Á (‚Ü‚½‚Í’¼Ú 5.1f ‚ğg—p)
+    private const float JUDGELINE_Z = 5.1f; // ï¿½ï¿½`ï¿½ï¿½Ç‰ï¿½ (ï¿½Ü‚ï¿½ï¿½Í’ï¿½ï¿½ï¿½ 5.1f ï¿½ï¿½ï¿½gï¿½p)
 
     void OnEnable()
     {
-        //‘ƒm[ƒc‚ğ0‚É‚·‚é
+        //ï¿½ï¿½ï¿½mï¿½[ï¿½cï¿½ï¿½0ï¿½É‚ï¿½ï¿½ï¿½
         noteNum = 0;
 
         songName = database.songData[SongSelect.select].songName;
 
-        Debug.Log($"•ˆ–Êƒtƒ@ƒCƒ‹: {songName}");
+        Debug.Log($"ï¿½ï¿½ï¿½Êƒtï¿½@ï¿½Cï¿½ï¿½: {songName}");
     }
 
-    // MusicManager‚©‚çŒÄ‚Ño‚³‚ê‚éFƒm[ƒc‚ğ¶¬‚·‚é
+    // MusicManagerï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½ï¿½ï¿½Fï¿½mï¿½[ï¿½cï¿½ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½
     public void GenerateNotes()
     {
-        // 1. ‘I‘ğ‚³‚ê‚½Šy‹È‚Æ•ˆ–ÊƒCƒ“ƒfƒbƒNƒX‚ğæ“¾
+        // 1. ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½yï¿½È‚Æ•ï¿½ï¿½ÊƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ï¿½ï¿½æ“¾
         int songIndex = SongSelect.select;
-        int chartIndex = SongSelect.selectedChartIndex; // ššš ‘I‘ğ‚³‚ê‚½•ˆ–ÊƒCƒ“ƒfƒbƒNƒX‚ğæ“¾
+        int chartIndex = SongSelect.selectedChartIndex; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ï¿½ï¿½ÊƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½ï¿½ï¿½æ“¾
 
-        // ƒGƒ‰[ƒ`ƒFƒbƒN
+        // ï¿½Gï¿½ï¿½ï¿½[ï¿½`ï¿½Fï¿½bï¿½N
         if (database == null || songIndex < 0 || songIndex >= database.songData.Length)
         {
-            Debug.LogError($"SongDataBase‚ª•s³A‚Ü‚½‚ÍŠy‹ÈID({songIndex})‚ª–³Œø‚Å‚·B");
+            Debug.LogError($"SongDataBaseï¿½ï¿½ï¿½sï¿½ï¿½ï¿½Aï¿½Ü‚ï¿½ï¿½ÍŠyï¿½ï¿½ID({songIndex})ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½B");
             return;
         }
 
@@ -76,77 +75,68 @@ public class NotesManager : MonoBehaviour
 
         if (chartIndex < 0 || chartIndex >= selectedSong.availableCharts.Count)
         {
-            Debug.LogError($"•ˆ–ÊID({chartIndex})‚ª–³Œø‚Å‚·BŠy‹È: {selectedSong.songName}");
+            Debug.LogError($"ï¿½ï¿½ï¿½ï¿½ID({chartIndex})ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½Bï¿½yï¿½ï¿½: {selectedSong.songName}");
             return;
         }
 
-        // ššš 2. ‘I‘ğ‚³‚ê‚½ ChartData ‚©‚çƒtƒ@ƒCƒ‹–¼‚ğæ“¾ ššš
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 2. ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ ChartData ï¿½ï¿½ï¿½ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         ChartData selectedChart = selectedSong.availableCharts[chartIndex];
-        string chartFileName = selectedChart.chartFileName; // •ˆ–Êƒtƒ@ƒCƒ‹–¼‚ğæ“¾
+        string chartFileName = selectedChart.chartFileName; // ï¿½ï¿½ï¿½Êƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾
 
-        // Šù‘¶‚Ì songName ‚ğ•ˆ–Ê–¼‚É’u‚«Š·‚¦‚éi‚à‚µ•K—v‚È‚çj
-        // songName = selectedSong.songName; // Šy‹È–¼©‘Ì‚Í‚»‚Ì‚Ü‚Ü
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ songName ï¿½ğ•ˆ–Ê–ï¿½ï¿½É’uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½Kï¿½vï¿½È‚ï¿½j
+        // songName = selectedSong.songName; // ï¿½yï¿½È–ï¿½ï¿½ï¿½ï¿½Ì‚Í‚ï¿½ï¿½Ì‚Ü‚ï¿½
 
-        // 3. •ˆ–Êƒtƒ@ƒCƒ‹‚ğ Resources ‚©‚ç“Ç‚İ‚İ
-        // Šù‘¶: TextAsset json = (TextAsset)Resources.Load("Notes/" + songName);
-        // ššš •ÏX: chartFileName‚ğg—p ššš
+        // 3. ï¿½ï¿½ï¿½Êƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ Resources ï¿½ï¿½ï¿½ï¿½Ç‚İï¿½ï¿½ï¿½
+        // ï¿½ï¿½ï¿½ï¿½: TextAsset json = (TextAsset)Resources.Load("Notes/" + songName);
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ÏX: chartFileNameï¿½ï¿½ï¿½gï¿½p ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         TextAsset json = (TextAsset)Resources.Load(chartFileName);
 
         if (json == null)
         {
-            Debug.LogError($"ƒm[ƒcƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ: Resources/{chartFileName}");
+            Debug.LogError($"ï¿½mï¿½[ï¿½cï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½: Resources/{chartFileName}");
             return;
         }
         Load(chartFileName);
-        if (longNotesManager != null)
-        {
-            // Šù‘¶‚Ì NotesManager.cs ‚Ì GenerateNotes ƒƒ\ƒbƒh“à‚Å Load ‚ªŒÄ‚Î‚ê‚½Œã‚ÉÀs
-            longNotesManager.GenerateLongNotes(chartFileName);
-        }
-        else
-        {
-            Debug.LogError("LongNotesManager‚ªNotesManager‚Éİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñB");
-        }
     }
 
     private void Load(string SongName)
     {
-        //jsonƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚Ş
+        //jsonï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½Ç‚İï¿½ï¿½ï¿½
         string inputString = Resources.Load<TextAsset>(SongName).ToString();
         Data inputJson = JsonUtility.FromJson<Data>(inputString);
 
-        //‘ƒm[ƒc”‚ğİ’è
+        //ï¿½ï¿½ï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½İ’ï¿½
         //noteNum = inputJson.notes.Length;
 
-        // ƒm[ƒcî•ñ‚ğˆê’UƒNƒŠƒA
+        // ï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Uï¿½Nï¿½ï¿½ï¿½A
         NotesTime.Clear();
         LaneNum.Clear();
         NoteType.Clear();
         NotesObj.Clear();
-        noteNum = 0; // ƒm[ƒc‘”‚ğƒŠƒZƒbƒg
+        noteNum = 0; // ï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½g
 
         for (int i = 0; i < inputJson.notes.Length; i++)
         {
-            // ššš ’Ç‰Á: type‚ª1i’Êíƒm[ƒcj‚Ìê‡‚Ì‚İˆ—‚ğs‚¤ ššš
+            // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç‰ï¿½: typeï¿½ï¿½1ï¿½iï¿½Êï¿½mï¿½[ï¿½cï¿½jï¿½Ìê‡ï¿½Ì‚İï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
             if (inputJson.notes[i].type == 1 && inputJson.notes[i].block<8)
             {
-                //ŠÔ‚ğŒvZ
+                //ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½vï¿½Z
                 float kankaku = 60 / (inputJson.BPM * (float)inputJson.notes[i].LPB);
                 float beatSec = kankaku * (float)inputJson.notes[i].LPB;
                 float time = (beatSec * inputJson.notes[i].num / (float)inputJson.notes[i].LPB) + inputJson.offset * 0.01f;
 
-                //ƒŠƒXƒg‚É’Ç‰Á
+                //ï¿½ï¿½ï¿½Xï¿½gï¿½É’Ç‰ï¿½
                 NotesTime.Add(time);
                 LaneNum.Add(inputJson.notes[i].block);
                 NoteType.Add(inputJson.notes[i].type);
 
                 float z_initial = time * NotesSpeed + JUDGELINE_Z;
 
-                //ƒm[ƒc‚ğ¶¬
-                // ’Êíƒm[ƒc‚ÌƒvƒŒƒnƒu‚ğg—p
+                //ï¿½mï¿½[ï¿½cï¿½ğ¶ï¿½
+                // ï¿½Êï¿½mï¿½[ï¿½cï¿½Ìƒvï¿½ï¿½ï¿½nï¿½uï¿½ï¿½ï¿½gï¿½p
                 GameObject newNote = Instantiate(noteObj, new Vector3(inputJson.notes[i].block * 2 - 7.0f, 0.55f, z_initial), Quaternion.identity);
 
-                // NotesManager‚ÌNotesSpeed‚ğƒm[ƒc‚ÌˆÚ“®ƒXƒNƒŠƒvƒg‚Éİ’è
+                // NotesManagerï¿½ï¿½NotesSpeedï¿½ï¿½ï¿½mï¿½[ï¿½cï¿½ÌˆÚ“ï¿½ï¿½Xï¿½Nï¿½ï¿½ï¿½vï¿½gï¿½Éİ’ï¿½
                 notes notesComponent = newNote.GetComponent<notes>();
                 if (notesComponent != null)
                 {
@@ -155,19 +145,19 @@ public class NotesManager : MonoBehaviour
                     NotesObj.Add(newNote);
                 }
 
-                noteNum++; // ¶¬‚µ‚½’Êíƒm[ƒc‚ğƒJƒEƒ“ƒg
+                noteNum++; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½g
             }
-            // type‚ª2ˆÈã‚Ìƒm[ƒc‚ÍAV‚µ‚¢ƒXƒNƒŠƒvƒg‚Åˆ—‚·‚é‚½‚ß‚É‚±‚±‚Å‚ÍƒXƒLƒbƒv
+            // typeï¿½ï¿½2ï¿½Èï¿½Ìƒmï¿½[ï¿½cï¿½ÍAï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½Nï¿½ï¿½ï¿½vï¿½gï¿½Åï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é‚½ï¿½ß‚É‚ï¿½ï¿½ï¿½ï¿½Å‚ÍƒXï¿½Lï¿½bï¿½v
         }
 
-        Debug.Log($"’Êíƒm[ƒc¶¬Š®—¹: {noteNum}ŒÂ");
+        Debug.Log($"ï¿½Êï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: {noteNum}ï¿½ï¿½");
     }
 
     public float GetMusicEndTime(float musicStartTime)
     {
         if (NotesTime.Count > 0)
         {
-            // ÅŒã‚Ìƒm[ƒc‚ÌŠÔ + ‰¹Šy‚ÌŠJnŠÔ
+            // ï¿½ÅŒï¿½Ìƒmï¿½[ï¿½cï¿½Ìï¿½ï¿½ï¿½ + ï¿½ï¿½ï¿½yï¿½ÌŠJï¿½nï¿½ï¿½ï¿½ï¿½
             return NotesTime[NotesTime.Count - 1] + musicStartTime;
         }
         return 0f;
@@ -182,7 +172,7 @@ public class NotesManager : MonoBehaviour
                 notes notesComponent = noteObj.GetComponent<notes>();
                 if (notesComponent != null)
                 {
-                    // Šy‹ÈŠJn‚ğƒm[ƒc‚É“n‚µAˆÚ“®ŠJnƒtƒ‰ƒO‚ğ—§‚Ä‚é
+                    // ï¿½yï¿½ÈŠJï¿½nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½[ï¿½cï¿½É“nï¿½ï¿½ï¿½Aï¿½Ú“ï¿½ï¿½Jï¿½nï¿½tï¿½ï¿½ï¿½Oï¿½ğ—§‚Ä‚ï¿½
                     notesComponent.musicStartTime = startMusicTime;
                     notesComponent.isGameStarted = true;
                 }

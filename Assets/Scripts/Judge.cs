@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic; // Dictionary‚ğg‚¤‚½‚ß‚É’Ç‰Á
+using System.Collections.Generic; // Dictionaryï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ß‚É’Ç‰ï¿½
 
 public class Judge : MonoBehaviour
 {
@@ -13,9 +13,7 @@ public class Judge : MonoBehaviour
     [SerializeField] private NEMSYSControllerInput nemsysController;
     [SerializeField] private MusicManager musicManager;
 
-    // ššš ’Ç‰Á: LongNotesManager‚ÌQÆ ššš
-    [SerializeField] private LongNotesManager longNotesManager;
-
+    
     int[] judgecnt = { 0, 0, 0, 0 };
     int score = 0;
     float displayScore = 0f;
@@ -37,14 +35,11 @@ public class Judge : MonoBehaviour
     int laneposition;
     bool IsGameEnded = false;
 
-    // ”»’è‚³‚ê‚½ƒm[ƒc‚Ì‘” (’Êíƒm[ƒc‚ÌPerfect/OK/Miss + ƒƒ“ƒOƒm[ƒc‚ÌŠJn/I—¹‚ÌPerfect/OK/Miss)
+    // ï¿½ï¿½ï¿½è‚³ï¿½ê‚½ï¿½mï¿½[ï¿½cï¿½Ì‘ï¿½ï¿½ï¿½ (ï¿½Êï¿½mï¿½[ï¿½cï¿½ï¿½Perfect/OK/Miss + ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½mï¿½[ï¿½cï¿½ÌŠJï¿½n/ï¿½Iï¿½ï¿½ï¿½ï¿½Perfect/OK/Miss)
     private int judgedNotesCount = 0;
 
-    // ššš ’Ç‰Á: ƒƒ“ƒOƒm[ƒc‚Ìó‘Ô’ÇÕ ššš
-    // Key: ƒŒ[ƒ“”Ô†, Value: ‰Ÿ‚³‚ê‚Ä‚¢‚éLongNoteƒIƒuƒWƒFƒNƒg
-    private Dictionary<int, GameObject> activeLongNotes = new Dictionary<int, GameObject>();
-
-    // “à•”—p‚Ì”»’èƒ^ƒCƒv’è‹`
+   
+    // ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½Ì”ï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½ï¿½`
     enum JudgementType { Start, Release }
 
     void Start()
@@ -53,8 +48,7 @@ public class Judge : MonoBehaviour
         slider.value = 0f;
         laneposition = 2;
         judgedNotesCount = 0;
-        activeLongNotes.Clear();
-
+        
         activateLane();
     }
 
@@ -63,14 +57,14 @@ public class Judge : MonoBehaviour
         UpdateScoreDisplay();
         UpdateGaugeTextPosition();
 
-        // ƒm[ƒc‚ª‚·‚×‚Ä”»’è‚³‚ê‚½ê‡‚ÌI—¹ˆ—
+        // ï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½×‚Ä”ï¿½ï¿½è‚³ï¿½ê‚½ï¿½ê‡ï¿½ÌIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         CheckGameEnd();
 
         if (IsGameEnded) return;
 
         bool usesController = nemsysController != null && nemsysController.IsInitialized;
 
-        // ššš ‰Ÿ‚µn‚ßE’Êíƒm[ƒc‚Ìƒ^ƒbƒv”»’è (GetButtonDown) ššš
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½nï¿½ßEï¿½Êï¿½mï¿½[ï¿½cï¿½Ìƒ^ï¿½bï¿½vï¿½ï¿½ï¿½ï¿½ (GetButtonDown) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         if ((usesController && nemsysController.GetButtonDown(0)) || Input.GetKeyDown(KeyCode.S))
         {
             CheckNoteHit(laneposition);
@@ -88,12 +82,6 @@ public class Judge : MonoBehaviour
             CheckNoteHit(laneposition + 3);
         }
 
-        // ššš ƒƒ“ƒOƒm[ƒc‚Ì‰Ÿ‚µI‚í‚è”»’è (GetButtonUp) ššš
-        CheckLongNoteReleaseInput(0, KeyCode.S, usesController, nemsysController);
-        CheckLongNoteReleaseInput(1, KeyCode.F, usesController, nemsysController);
-        CheckLongNoteReleaseInput(2, KeyCode.J, usesController, nemsysController);
-        CheckLongNoteReleaseInput(3, KeyCode.L, usesController, nemsysController);
-
 
         if (laneposition > 0 && ((usesController && nemsysController.GetButtonDown(4)) || Input.GetKeyDown(KeyCode.E)))
         {
@@ -107,28 +95,11 @@ public class Judge : MonoBehaviour
             activateLane();
         }
 
-        // Miss”»’è
+        // Missï¿½ï¿½ï¿½ï¿½
         HandleNormalNoteMiss();
-        HandleLongNoteHoldMiss();
     }
 
-    // ššš V‹Kƒƒ\ƒbƒh: ƒƒ“ƒOƒm[ƒc‚Ì‰Ÿ‚µI‚í‚è“ü—Íƒ`ƒFƒbƒN ššš
-    void CheckLongNoteReleaseInput(int buttonIndex, KeyCode keyCode, bool usesController, NEMSYSControllerInput controller)
-    {
-        int lane = laneposition + buttonIndex;
-
-        if (activeLongNotes.ContainsKey(lane))
-        {
-            bool released = (usesController && controller.GetButtonUp(buttonIndex)) || Input.GetKeyUp(keyCode);
-
-            if (released)
-            {
-                CheckLongNoteRelease(lane);
-            }
-        }
-    }
-
-    // ššš C³: ’Êíƒm[ƒc‚ÌMiss”»’è‚ğƒƒ\ƒbƒh‚ÉØ‚èo‚µ ššš
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Cï¿½ï¿½: ï¿½Êï¿½mï¿½[ï¿½cï¿½ï¿½Missï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½\ï¿½bï¿½hï¿½ÉØ‚ï¿½oï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void HandleNormalNoteMiss()
     {
         if (notesManager.NotesTime.Count > 0)
@@ -138,90 +109,27 @@ public class Judge : MonoBehaviour
             if (Time.time > noteIdealTime + 0.10f)
             {
                 message(2); // Miss
-                deleteData(0); // ’Êíƒm[ƒc‚ğíœ
+                deleteData(0); // ï¿½Êï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½íœ
                 judgedNotesCount++;
-                Debug.Log($"Miss (©“®íœ) - ”»’èÏ‚İ’Êíƒm[ƒc: {judgedNotesCount}");
+                Debug.Log($"Miss (ï¿½ï¿½ï¿½ï¿½ï¿½íœ) - ï¿½ï¿½ï¿½ï¿½Ï‚İ’Êï¿½mï¿½[ï¿½c: {judgedNotesCount}");
                 slider.value -= 1.0f;
             }
         }
     }
 
-    // ššš V‹Kƒƒ\ƒbƒh: ƒƒ“ƒOƒm[ƒc‚Ìƒz[ƒ‹ƒh’†‹y‚ÑI—¹Œã‚ÌMiss”»’è/©“®íœ ššš
-    void HandleLongNoteHoldMiss()
-    {
-        if (longNotesManager == null) return;
 
-        // 1. ©“®Missi‰Ÿ‚µn‚ß‚ğ“¦‚µ‚½ê‡j
-        if (longNotesManager.LongNotesObj.Count > 0)
-        {
-            // NotesManager‚Æ“¯—l‚ÉAí‚ÉƒŠƒXƒg‚Ìæ“ª‚ğŸ‚Ìƒm[ƒc‚Æ‚µ‚Äƒ`ƒFƒbƒN
-            GameObject firstLongNoteObj = longNotesManager.LongNotesObj[0];
-            LongNote firstLongNote = firstLongNoteObj.GetComponent<LongNote>();
-
-            // ‚Ü‚¾ƒz[ƒ‹ƒh‚³‚ê‚Ä‚¢‚È‚¢ƒƒ“ƒOƒm[ƒc‚Ì”»’èŠÔ‚ğ‰ß‚¬‚½ê‡
-            if (firstLongNote != null && !activeLongNotes.ContainsValue(firstLongNoteObj))
-            {
-                float noteIdealTime = firstLongNote.startTargetTime + musicManager.MusicStartTime;
-
-                // ‰Ÿ‚µn‚ß‚Ìó•tŠúŠÔ‚ğ‰ß‚¬‚½ê‡ (’Êíƒm[ƒc‚Æ“¯‚¶0.10f‚ğ’´‰ß)
-                if (Time.time > noteIdealTime + 0.10f)
-                {
-                    message(2); // Miss
-                    DeleteLongNoteData(firstLongNoteObj, 0); // ƒƒ“ƒOƒm[ƒc‚ğíœ
-                    judgedNotesCount++; // ‰Ÿ‚µn‚ß‚ÌMiss‚Æ‚µ‚ÄƒJƒEƒ“ƒg
-                    Debug.Log($"Long Note Start Miss (©“®íœ) - ”»’èÏ‚İ: {judgedNotesCount}");
-                    slider.value -= 1.0f;
-                }
-            }
-        }
-
-        // 2. I“_ŠÔƒ`ƒFƒbƒNi‰Ÿ‚µ‚Á‚Ï‚È‚µ‚ª’·‚·‚¬‚½ê‡ -> ©“®Perfect/OK‚ÅI—¹j
-        List<int> lanesToRelease = new List<int>();
-        foreach (var pair in activeLongNotes)
-        {
-            int lane = pair.Key;
-            GameObject longNoteObj = pair.Value;
-            LongNote longNote = longNoteObj.GetComponent<LongNote>();
-
-            if (longNote == null)
-            {
-                lanesToRelease.Add(lane);
-                continue;
-            }
-
-            float musicCurrentTime = Time.time - musicManager.MusicStartTime;
-            float endTargetTime = longNote.endTargetTime;
-
-            // I“_ŠÔ‚ğ‰ß‚¬‚½ê‡i0.10f‚Ì—P—\ŠúŠÔ‚İj
-            if (musicCurrentTime > endTargetTime + 0.10f)
-            {
-                // Perfect/OK”»’è‚Æ‚µ‚Äˆ—‚µAƒz[ƒ‹ƒhI—¹
-                // timeLag=0.0f‚Æ‚µ‚ÄPerfect‘Š“–‚Åˆ—
-                LongNoteJudgement(longNoteObj, JudgementType.Release, 0.0f, lane);
-                lanesToRelease.Add(lane);
-            }
-        }
-
-        foreach (int lane in lanesToRelease)
-        {
-            activeLongNotes.Remove(lane);
-        }
-    }
-
-
-    // ƒQ[ƒ€I—¹ƒ`ƒFƒbƒNi‚·‚×‚Ä‚Ìƒm[ƒc‚ª”»’è‚³‚ê‚½‚©j
+    // ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½Nï¿½iï¿½ï¿½ï¿½×‚Ä‚Ìƒmï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½è‚³ï¿½ê‚½ï¿½ï¿½ï¿½j
     void CheckGameEnd()
     {
         if (IsGameEnded) return;
 
-        // ƒm[ƒc‘”‚ğŒvZ (’Êíƒm[ƒc + ƒƒ“ƒOƒm[ƒc‚ÌŠJn/I—¹‚Ì2‰ñ)
-        int totalNotesCount = (notesManager != null ? notesManager.noteNum : 0) +
-                              (longNotesManager != null ? longNotesManager.longNoteCount * 2 : 0);
+        // ï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Z (ï¿½Êï¿½mï¿½[ï¿½c + ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½mï¿½[ï¿½cï¿½ÌŠJï¿½n/ï¿½Iï¿½ï¿½ï¿½ï¿½2ï¿½ï¿½)
+        int totalNotesCount = (notesManager != null ? notesManager.noteNum : 0);
 
-        // ‚·‚×‚Ä‚Ìƒm[ƒc‚ª”»’è‚³‚êA‚©‚Â­‚µŠÔ‚ªŒo‰ß‚µ‚½ê‡
+        // ï¿½ï¿½ï¿½×‚Ä‚Ìƒmï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½ï¿½è‚³ï¿½ï¿½Aï¿½ï¿½ï¿½Âï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½oï¿½ß‚ï¿½ï¿½ï¿½ï¿½ê‡
         if (musicManager.IsPlaying && judgedNotesCount >= totalNotesCount && Time.time > endTime + musicManager.MusicStartTime + 1f)
         {
-            // ƒNƒŠƒA”»’è
+            // ï¿½Nï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½
             if (slider.value < 70.0f)
             {
                 MessageObj[6].text = "FAILED...";
@@ -230,12 +138,12 @@ public class Judge : MonoBehaviour
             {
                 MessageObj[6].text = "CLEAR";
 
-                // ƒtƒ‹ƒRƒ“ƒ{”»’èiMiss‚ª0‚Ìê‡j
+                // ï¿½tï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½ï¿½iMissï¿½ï¿½0ï¿½Ìê‡ï¿½j
                 if (judgecnt[2] == 0)
                 {
                     MessageObj[6].text = "FULL COMBO";
 
-                    // ƒI[ƒ‹ƒp[ƒtƒFƒNƒg”»’è
+                    // ï¿½Iï¿½[ï¿½ï¿½ï¿½pï¿½[ï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½
                     if (judgecnt[0] == totalNotesCount)
                     {
                         MessageObj[6].text = "ALL PERFECT";
@@ -249,18 +157,11 @@ public class Judge : MonoBehaviour
         }
     }
 
-    // ššš C³: CheckNoteHit (ƒƒ“ƒOƒm[ƒc‚Ì‰Ÿ‚µn‚ß‚ğ”»’è‚É’Ç‰Á) ššš
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Cï¿½ï¿½: CheckNoteHit (ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½mï¿½[ï¿½cï¿½Ì‰ï¿½ï¿½ï¿½ï¿½nï¿½ß‚ğ”»’ï¿½É’Ç‰ï¿½) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     void CheckNoteHit(int lane)
     {
-        // Šù‚É‚»‚ÌƒŒ[ƒ“‚Åƒƒ“ƒOƒm[ƒc‚ğƒz[ƒ‹ƒh’†‚Ìê‡‚ÍA‹ó‘Å‚¿‚Æ‚µ‚Äˆµ‚¤
-        if (activeLongNotes.ContainsKey(lane))
-        {
-            Debug.Log($"ƒŒ[ƒ“{lane}: ƒƒ“ƒOƒm[ƒcƒz[ƒ‹ƒh’†‚ÌŒë“ü—Í");
-            TriggerLaneLight(lane, 2);
-            return;
-        }
 
-        // 1. ’Êíƒm[ƒc (type:1) ‚Ì”»’è (NotesManager‚Étype:1‚Ì‚İ‚ªŠi”[‚³‚ê‚Ä‚¢‚é‘O’ñ)
+        // 1. ï¿½Êï¿½mï¿½[ï¿½c (type:1) ï¿½Ì”ï¿½ï¿½ï¿½ (NotesManagerï¿½ï¿½type:1ï¿½Ì‚İ‚ï¿½ï¿½iï¿½[ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Oï¿½ï¿½)
         for (int i = 0; i < notesManager.LaneNum.Count; i++)
         {
             if (notesManager.LaneNum[i] == lane)
@@ -270,144 +171,24 @@ public class Judge : MonoBehaviour
 
                 if (timeLag <= 0.10f)
                 {
-                    Judgement(timeLag, i, lane); // ’Êíƒm[ƒc”»’è
+                    Judgement(timeLag, i, lane); // ï¿½Êï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½
                     return;
                 }
                 else if (Time.time < noteIdealTime)
                 {
-                    Debug.Log($"ƒŒ[ƒ“{lane}: ‘‚·‚¬i’Êíƒm[ƒcj");
+                    Debug.Log($"ï¿½ï¿½ï¿½[ï¿½ï¿½{lane}: ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½Êï¿½mï¿½[ï¿½cï¿½j");
                     TriggerLaneLight(lane, 2);
                     return;
                 }
             }
         }
 
-        // 2. ƒƒ“ƒOƒm[ƒc (type:2) ‚Ì‰Ÿ‚µn‚ß”»’è
-        if (longNotesManager != null && longNotesManager.LongNotesObj.Count > 0)
-        {
-            // NotesManager‚Æ“¯—l‚ÉAæ“ªƒm[ƒc‚ªŸ‚É”»’è‚³‚ê‚é‚×‚«ƒm[ƒc
-            GameObject firstLongNoteObj = longNotesManager.LongNotesObj[0];
-            LongNote firstLongNote = firstLongNoteObj.GetComponent<LongNote>();
-
-            // æ“ª‚Ìƒƒ“ƒOƒm[ƒc‚ªŠY“–ƒŒ[ƒ“‚Ì‚à‚Ì‚Å‚ ‚ê‚Î”»’è
-            if (firstLongNote != null && firstLongNote.lane == lane)
-            {
-                CheckLongNoteHit(firstLongNoteObj, lane); // ƒƒ“ƒOƒm[ƒc‚Ì‰Ÿ‚µn‚ß”»’è
-                return;
-            }
-        }
-
-        Debug.Log($"ƒŒ[ƒ“{lane}: ‹ó‘Å‚¿");
+        Debug.Log($"ï¿½ï¿½ï¿½[ï¿½ï¿½{lane}: ï¿½ï¿½Å‚ï¿½");
         TriggerLaneLight(lane, 2);
     }
 
-    // ššš V‹Kƒƒ\ƒbƒh: ƒƒ“ƒOƒm[ƒc‚Ì‰Ÿ‚µn‚ß”»’è (Start) ššš
-    void CheckLongNoteHit(GameObject longNoteObj, int lane)
-    {
-        LongNote longNote = longNoteObj.GetComponent<LongNote>();
-        if (longNote == null) return;
 
-        float noteIdealTime = longNote.startTargetTime + musicManager.MusicStartTime;
-        float timeLag = GetABS(Time.time - noteIdealTime);
-
-        if (timeLag <= 0.10f)
-        {
-            // Perfect/OK”»’è
-            LongNoteJudgement(longNoteObj, JudgementType.Start, timeLag, lane);
-
-            // ”»’è¬Œ÷: LongNotesManager‚ÌƒŠƒXƒg‚©‚çƒm[ƒc‚ğíœ‚µAƒz[ƒ‹ƒhó‘Ô‚ÉˆÚs
-            // LongNotesManager‚ÌƒŠƒXƒg‚©‚çíœ‚·‚é‘ã‚í‚è‚ÉAƒAƒNƒeƒBƒuƒŠƒXƒg‚É’Ç‰Á‚·‚é
-            activeLongNotes.Add(lane, longNoteObj);
-
-            // NotesManager‚ÆˆÙ‚È‚èALongNotesManager‚ÌƒŠƒXƒg‚©‚ç‚ÍA‚±‚±‚Å‚Í**íœ‚µ‚È‚¢**B
-            // íœ‚ÍI“_”»’è‚Ü‚½‚ÍMiss‚Ü‚Å•Û
-        }
-        else if (Time.time < noteIdealTime)
-        {
-            Debug.Log($"ƒŒ[ƒ“{lane}: ‘‚·‚¬iƒƒ“ƒOƒm[ƒcj");
-            TriggerLaneLight(lane, 2);
-        }
-    }
-
-    // ššš V‹Kƒƒ\ƒbƒh: ƒƒ“ƒOƒm[ƒc‚Ì‰Ÿ‚µI‚í‚è”»’è (Release) ššš
-    void CheckLongNoteRelease(int lane)
-    {
-        if (!activeLongNotes.TryGetValue(lane, out GameObject longNoteObj))
-        {
-            return;
-        }
-
-        LongNote longNote = longNoteObj.GetComponent<LongNote>();
-        if (longNote == null)
-        {
-            activeLongNotes.Remove(lane);
-            return;
-        }
-
-        float noteIdealTime = longNote.endTargetTime + musicManager.MusicStartTime;
-        float timeLag = GetABS(Time.time - noteIdealTime);
-
-        // I“_”»’è‚Ì‹–—e”ÍˆÍ (—á: 0.10f)
-        if (timeLag <= 0.10f)
-        {
-            // Perfect/OK”»’è
-            LongNoteJudgement(longNoteObj, JudgementType.Release, timeLag, lane);
-        }
-        else
-        {
-            // Miss ”»’è (‘‚·‚¬‚é/’x‚·‚¬‚éƒŠƒŠ[ƒX)
-            Debug.Log($"Long Note Release Miss - TimeLag: {timeLag:F3}");
-            message(2); // Miss
-            slider.value -= 1.0f;
-            TriggerLaneLight(lane, 2);
-            judgedNotesCount++; // ‰Ÿ‚µI‚í‚è‚ÌMiss‚Æ‚µ‚ÄƒJƒEƒ“ƒg
-        }
-
-        // ”»’è‚ª¬Œ÷/¸”s‚É‚©‚©‚í‚ç‚¸Aƒz[ƒ‹ƒhó‘Ô‚ğ‰ğœ‚µAƒm[ƒc‚ğíœ
-        activeLongNotes.Remove(lane);
-        DeleteLongNoteData(longNoteObj);
-    }
-
-    // ššš V‹Kƒƒ\ƒbƒh: ƒƒ“ƒOƒm[ƒc‚Ì”»’èˆ— ššš
-    void LongNoteJudgement(GameObject longNoteObj, JudgementType type, float timeLag, int lane)
-    {
-        bool isPerfect = timeLag <= 0.045f;
-        float scoreValue = 1.5f;
-
-        if (isPerfect)
-        {
-            Debug.Log($"Long Note {(type == JudgementType.Start ? "Start" : "Release")} Perfect");
-            message(0);
-            addScore(0);
-            slider.value += scoreValue;
-
-            if (judgeSoundSource != null && perfectClip != null)
-            {
-                judgeSoundSource.PlayOneShot(perfectClip);
-            }
-
-            TriggerLaneLight(lane, 0);
-        }
-        else // OK”»’è
-        {
-            Debug.Log($"Long Note {(type == JudgementType.Start ? "Start" : "Release")} OK");
-            message(1);
-            addScore(1);
-            slider.value += scoreValue;
-
-            if (judgeSoundSource != null && okClip != null)
-            {
-                judgeSoundSource.PlayOneShot(okClip);
-            }
-
-            TriggerLaneLight(lane, 1);
-        }
-
-        judgedNotesCount++;
-        Debug.Log($"Long Note {(type == JudgementType.Start ? "Start" : "Release")} - ”»’èÏ‚İ: {judgedNotesCount}");
-    }
-
-    // ’Êíƒm[ƒc‚Ì”»’èˆ—
+    // ï¿½Êï¿½mï¿½[ï¿½cï¿½Ì”ï¿½ï¿½èˆï¿½ï¿½
     void Judgement(float timeLag, int noteIndex, int lane)
     {
         if (timeLag <= 0.045f)
@@ -425,7 +206,7 @@ public class Judge : MonoBehaviour
             TriggerLaneLight(lane, 0);
             deleteData(noteIndex);
             judgedNotesCount++;
-            Debug.Log($"Perfect - ”»’èÏ‚İ: {judgedNotesCount}");
+            Debug.Log($"Perfect - ï¿½ï¿½ï¿½ï¿½Ï‚ï¿½: {judgedNotesCount}");
         }
         else if (timeLag <= 0.10f)
         {
@@ -442,7 +223,7 @@ public class Judge : MonoBehaviour
             TriggerLaneLight(lane, 1);
             deleteData(noteIndex);
             judgedNotesCount++;
-            Debug.Log($"OK - ”»’èÏ‚İ: {judgedNotesCount}");
+            Debug.Log($"OK - ï¿½ï¿½ï¿½ï¿½Ï‚ï¿½: {judgedNotesCount}");
         }
     }
 
@@ -469,7 +250,7 @@ public class Judge : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"ƒŒ[ƒ“{laneNum}‚ÌlightsScript‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+            Debug.LogWarning($"ï¿½ï¿½ï¿½[ï¿½ï¿½{laneNum}ï¿½ï¿½lightsScriptï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
         }
     }
 
@@ -478,7 +259,7 @@ public class Judge : MonoBehaviour
         return num >= 0 ? num : -num;
     }
 
-    // ’Êíƒm[ƒc‚Ìƒf[ƒ^íœ
+    // ï¿½Êï¿½mï¿½[ï¿½cï¿½Ìƒfï¿½[ï¿½^ï¿½íœ
     void deleteData(int index)
     {
         notesManager.NotesTime.RemoveAt(index);
@@ -492,22 +273,6 @@ public class Judge : MonoBehaviour
         }
     }
 
-    // ššš V‹Kƒƒ\ƒbƒh: ƒƒ“ƒOƒm[ƒc‚Ìƒf[ƒ^íœ ššš
-    void DeleteLongNoteData(GameObject longNoteObj, int index = -1)
-    {
-        if (longNotesManager == null) return;
-
-        // LongNotesManager‚ÌƒŠƒXƒg‚©‚çƒm[ƒc‚ğíœ
-        // ’Êí‚Íæ“ª‚Ìƒm[ƒc‚ª”»’è‚³‚ê‚é‚½‚ßAindex=0‚Åíœ‚ğ‚İ‚é
-        int actualIndex = (index == -1) ? longNotesManager.LongNotesObj.IndexOf(longNoteObj) : index;
-
-        if (actualIndex >= 0 && actualIndex < longNotesManager.LongNotesObj.Count && longNotesManager.LongNotesObj[actualIndex] == longNoteObj)
-        {
-            longNotesManager.LongNotesObj.RemoveAt(actualIndex);
-        }
-
-        Destroy(longNoteObj);
-    }
 
     void message(int judge)
     {
@@ -528,7 +293,7 @@ public class Judge : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning($"MessageObj[{judge}]‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+            Debug.LogWarning($"MessageObj[{judge}]ï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
         }
 
         if (MessageObj.Length > 3 && MessageObj[3] != null)
@@ -550,7 +315,7 @@ public class Judge : MonoBehaviour
         }
         else if (judge == 1)
         {
-            // OK”»’è‚Í Perfect ‚Ì 3/4 ‚ÌƒXƒRƒA
+            // OKï¿½ï¿½ï¿½ï¿½ï¿½ Perfect ï¿½ï¿½ 3/4 ï¿½ÌƒXï¿½Rï¿½A
             score += scorestandard * 3 / 4;
         }
 
@@ -652,7 +417,7 @@ public class Judge : MonoBehaviour
             GameResultData.ResultRank = "S";
         }
 
-        Debug.Log($"ƒQ[ƒ€I—¹ - ƒXƒRƒA: {score}, ƒ‰ƒ“ƒN: {GameResultData.ResultRank}");
+        Debug.Log($"ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½ï¿½ - ï¿½Xï¿½Rï¿½A: {score}, ï¿½ï¿½ï¿½ï¿½ï¿½N: {GameResultData.ResultRank}");
     }
 
     void ResultScene()
@@ -660,12 +425,11 @@ public class Judge : MonoBehaviour
         SceneManager.LoadScene("ResultScene");
     }
 
-    // ššš C³: InitGameData (ƒƒ“ƒOƒm[ƒc‚Ì‘”‚ğŠÜ‚ß‚ÄƒXƒRƒAŒvZ) ššš
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Cï¿½ï¿½: InitGameData (ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½mï¿½[ï¿½cï¿½Ì‘ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü‚ß‚ÄƒXï¿½Rï¿½Aï¿½vï¿½Z) ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public void InitGameData()
     {
-        // ƒƒ“ƒOƒm[ƒc‚ÍuŠJnv‚ÆuI—¹v‚Ì2‰ñ”»’è‚³‚ê‚é‚½‚ßA‘ƒm[ƒc”‚ğ (’Êíƒm[ƒc” + ƒƒ“ƒOƒm[ƒc” * 2) ‚ÅŒvZ
-        int totalNotes = (notesManager != null ? notesManager.noteNum : 0) +
-                         (longNotesManager != null ? longNotesManager.longNoteCount * 2 : 0);
+        // ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½mï¿½[ï¿½cï¿½Íuï¿½Jï¿½nï¿½vï¿½Æuï¿½Iï¿½ï¿½ï¿½vï¿½ï¿½2ï¿½ñ”»’è‚³ï¿½ï¿½é‚½ï¿½ßAï¿½ï¿½ï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½ (ï¿½Êï¿½mï¿½[ï¿½cï¿½ï¿½ + ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½mï¿½[ï¿½cï¿½ï¿½ * 2) ï¿½ÅŒvï¿½Z
+        int totalNotes = (notesManager != null ? notesManager.noteNum : 0);
 
         if (totalNotes > 0)
         {
@@ -673,35 +437,24 @@ public class Judge : MonoBehaviour
             remainderFlug = true;
             remainder = 1000000 % totalNotes;
 
-            Debug.Log($"‘”»’è‰ñ”: {totalNotes}, 1”»’è‚ ‚½‚è‚ÌƒXƒRƒA: {scorestandard}");
+            Debug.Log($"ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: {totalNotes}, 1ï¿½ï¿½ï¿½è‚ ï¿½ï¿½ï¿½ï¿½ÌƒXï¿½Rï¿½A: {scorestandard}");
         }
         else
         {
-            Debug.LogError("ƒm[ƒcƒ}ƒl[ƒWƒƒ‚ªİ’è‚³‚ê‚Ä‚¢‚È‚¢‚©Aƒm[ƒc”‚ª0‚Å‚·");
+            Debug.LogError("ï¿½mï¿½[ï¿½cï¿½}ï¿½lï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ï¿½ï¿½Aï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½ï¿½0ï¿½Å‚ï¿½");
             scorestandard = 0;
             return;
         }
 
-        // I—¹ŠÔ‚ÌŒvZ (NotesManager‚ÆLongNotesManager‚ÌÅIƒm[ƒc‚ğ”äŠr)
+        // ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ÌŒvï¿½Z (NotesManagerï¿½ï¿½LongNotesManagerï¿½ÌÅIï¿½mï¿½[ï¿½cï¿½ï¿½ï¿½r)
         float normalNoteEndTime = (notesManager != null && notesManager.NotesTime.Count > 0) ? notesManager.NotesTime[notesManager.NotesTime.Count - 1] : 0f;
 
-        float longNoteEndTime = 0f;
-        if (longNotesManager != null && longNotesManager.LongNotesObj.Count > 0)
-        {
-            LongNote lastLongNote = longNotesManager.LongNotesObj[longNotesManager.LongNotesObj.Count - 1].GetComponent<LongNote>();
-            if (lastLongNote != null)
-            {
-                // ƒƒ“ƒOƒm[ƒc‚ÌI—¹ŠÔ‚ğg—p
-                longNoteEndTime = lastLongNote.endTargetTime;
-            }
-        }
-
-        endTime = Mathf.Max(normalNoteEndTime, longNoteEndTime);
+        endTime = normalNoteEndTime;
 
         if (musicManager == null)
         {
-            Debug.LogError("MusicManager‚ªİ’è‚³‚ê‚Ä‚¢‚Ü‚¹‚ñ");
+            Debug.LogError("MusicManagerï¿½ï¿½ï¿½İ’è‚³ï¿½ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½");
         }
-        Debug.Log($"Šy‹ÈI—¹ŠÔ: {endTime}•b");
+        Debug.Log($"ï¿½yï¿½ÈIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½: {endTime}ï¿½b");
     }
 }

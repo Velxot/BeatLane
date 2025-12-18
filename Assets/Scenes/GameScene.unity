@@ -169,7 +169,6 @@ MonoBehaviour:
   - {fileID: 854748671}
   nemsysController: {fileID: 677264268}
   musicManager: {fileID: 2112736297}
-  longNotesManager: {fileID: 1187840834}
   scoreAnimationDuration: 0.1
   judgeSoundSource: {fileID: 390320679}
   perfectClip: {fileID: 8300000, guid: 03886b03600d03449a38b258554e9f03, type: 3}
@@ -1296,7 +1295,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 997821216}
-  - {fileID: 1187840835}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519165699
@@ -2670,9 +2668,8 @@ MonoBehaviour:
   NoteType: 
   NotesTime: []
   NotesObj: []
-  NotesSpeed: 30
+  NotesSpeed: 50
   noteObj: {fileID: 7298742540482570593, guid: 4db5403b8e7b4734782441b0aa2db760, type: 3}
-  longNotesManager: {fileID: 1187840834}
   database: {fileID: 11400000, guid: f00041bc94fb1394eb31ffc3fa5e7dca, type: 2}
   musicManager: {fileID: 2112736297}
 --- !u!1 &1038434513
@@ -2753,54 +2750,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1187840833
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1187840835}
-  - component: {fileID: 1187840834}
-  m_Layer: 0
-  m_Name: LongNotesManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1187840834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1187840833}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99d9e1e8322d89b41a967edeee4b8b08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  longNotePrefab: {fileID: 5785370834031379199, guid: 87d4f300632e24f4e94f331b43c9f1d2, type: 3}
-  NotesSpeed: 0
-  LongNotesObj: []
-  longNoteCount: 0
---- !u!4 &1187840835
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1187840833}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 511324233}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1226583733
 GameObject:
