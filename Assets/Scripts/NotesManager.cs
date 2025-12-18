@@ -40,6 +40,12 @@ public class NotesManager : MonoBehaviour
     //�m�[�c��prefab������
     [SerializeField] GameObject noteObj;
 
+    [SerializeField] GameObject rightnoteObj;
+
+    [SerializeField] GameObject leftnoteObj;
+
+    [SerializeField] GameObject tracenoteObj;
+
     
     [SerializeField] SongDataBase database;
 
@@ -118,7 +124,7 @@ public class NotesManager : MonoBehaviour
         for (int i = 0; i < inputJson.notes.Length; i++)
         {
             // ������ �ǉ�: type��1�i�ʏ�m�[�c�j�̏ꍇ�̂ݏ������s�� ������
-            if (inputJson.notes[i].type == 1 && inputJson.notes[i].block<8)
+            if (inputJson.notes[i].type == 1)
             {
                 //���Ԃ��v�Z
                 float kankaku = 60 / (inputJson.BPM * (float)inputJson.notes[i].LPB);
@@ -132,9 +138,31 @@ public class NotesManager : MonoBehaviour
 
                 float z_initial = time * NotesSpeed + JUDGELINE_Z;
 
-                //�m�[�c�𐶐�
-                // �ʏ�m�[�c�̃v���n�u���g�p
-                GameObject newNote = Instantiate(noteObj, new Vector3(inputJson.notes[i].block * 2 - 7.0f, 0.55f, z_initial), Quaternion.identity);
+                //ノーツ生成
+                GameObject newNote;
+                //左レーン切替ノーツ生成    
+                if(inputJson.notes[i].block == 16)
+                {
+                    newNote = Instantiate(leftnoteObj, new Vector3(0f, 0.55f, z_initial), Quaternion.identity);
+                    newNote.transform.localScale = new Vector3(16.0f, 0.3f, 0.3f);
+                }
+                //右レーン切替ノーツ生成
+                else if(inputJson.notes[i].block == 17)
+                {
+                    newNote = Instantiate(rightnoteObj, new Vector3(0f, 0.55f, z_initial), Quaternion.identity);
+                    newNote.transform.localScale = new Vector3(16.0f, 0.3f, 0.3f);
+                }
+                // 通常ノーツ生成
+                else if(inputJson.notes[i].block % 2 == 0)
+                {
+                    newNote = Instantiate(noteObj, new Vector3(inputJson.notes[i].block - 7.0f, 0.55f, z_initial), Quaternion.identity);
+                }
+                // トレースノーツ生成
+                else
+                {
+                    newNote = Instantiate(tracenoteObj, new Vector3(inputJson.notes[i].block - 1 - 7.0f, 0.55f, z_initial), Quaternion.identity);
+                }
+
 
                 // NotesManager��NotesSpeed���m�[�c�̈ړ��X�N���v�g�ɐݒ�
                 notes notesComponent = newNote.GetComponent<notes>();

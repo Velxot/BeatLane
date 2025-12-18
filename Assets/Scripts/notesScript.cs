@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class notes : MonoBehaviour
 {
     // ノーツの移動速度 (NotesManagerから設定される)
-    public float notesSpeed = 15.0f;
+    public float notesSpeed;
 
     // ノーツが判定線(Z=0)に到達する時刻 (楽曲開始からの相対秒数)
     [HideInInspector] public float targetTime;

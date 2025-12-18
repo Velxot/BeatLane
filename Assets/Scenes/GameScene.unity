@@ -2670,6 +2670,9 @@ MonoBehaviour:
   NotesObj: []
   NotesSpeed: 50
   noteObj: {fileID: 7298742540482570593, guid: 4db5403b8e7b4734782441b0aa2db760, type: 3}
+  rightnoteObj: {fileID: 6527397824214032525, guid: 050586ff0d2537948b69a4712d22fa39, type: 3}
+  leftnoteObj: {fileID: 7001391155992332135, guid: d03c40f10a9b87d4d805d04d4c216dca, type: 3}
+  tracenoteObj: {fileID: 7298742540482570593, guid: 5c220319de24a554bb50ec6045b7550c, type: 3}
   database: {fileID: 11400000, guid: f00041bc94fb1394eb31ffc3fa5e7dca, type: 2}
   musicManager: {fileID: 2112736297}
 --- !u!1 &1038434513
