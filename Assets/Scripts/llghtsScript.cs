@@ -2,16 +2,16 @@ using UnityEngine;
 
 public class lightsScript : MonoBehaviour
 {
-    [SerializeField] private float Speed = 10; // Œõ‚ÌÁ‚¦‚é‘¬“x
-    [SerializeField] public int num = 0; // ‘Î‰‚·‚éƒŒ[ƒ“”Ô†(2-5)
+    [SerializeField] private float Speed = 10; // ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½é‘¬ï¿½x
+    [SerializeField] public int num = 0; // ï¿½Î‰ï¿½ï¿½ï¿½ï¿½éƒŒï¿½[ï¿½ï¿½ï¿½Ôï¿½(2-5)
 
     private Renderer rend;
     private float alfa = 0;
 
-    // ”»’è‚²‚Æ‚ÌFİ’è
-    private Color perfectColor = new Color(1f, 0.84f, 0f); // ‹àF
-    private Color okColor = new Color(0.3f, 0.6f, 1f); // ÂF
-    private Color defaultColor = new Color(1f, 1f, 1f); // ”’FiƒfƒtƒHƒ‹ƒgj
+    // ï¿½ï¿½ï¿½è‚²ï¿½Æ‚ÌFï¿½İ’ï¿½
+    private Color perfectColor = new Color(1f, 0.84f, 0f); // ï¿½ï¿½ï¿½F
+    private Color okColor = new Color(0.3f, 0.6f, 1f); // ï¿½ÂF
+    private Color defaultColor = new Color(1f, 1f, 1f); // ï¿½ï¿½ï¿½Fï¿½iï¿½fï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½j
 
     private Color currentColor;
 
@@ -20,13 +20,13 @@ public class lightsScript : MonoBehaviour
         rend = GetComponent<Renderer>();
         currentColor = defaultColor;
 
-        // ‰Šúó‘Ô‚ğ“§–¾‚É‚·‚é
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ğ“§–ï¿½ï¿½É‚ï¿½ï¿½ï¿½
         rend.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, 0f);
     }
 
     void Update()
     {
-        // “§–¾“x‚ª0‚æ‚è‘å‚«‚¢ê‡A™X‚ÉŒ¸‚ç‚·
+        // ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½0ï¿½ï¿½ï¿½å‚«ï¿½ï¿½ï¿½ê‡ï¿½Aï¿½ï¿½ï¿½Xï¿½ÉŒï¿½ï¿½ç‚·
         if (alfa > 0)
         {
             alfa -= Speed * Time.deltaTime;
@@ -36,37 +36,40 @@ public class lightsScript : MonoBehaviour
                 alfa = 0;
             }
 
-            // Œ»İ‚ÌF‚É“§–¾“x‚ğ“K—p
+            // ï¿½ï¿½ï¿½İ‚ÌFï¿½É“ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½Kï¿½p
             rend.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alfa);
         }
     }
 
-    // ŠO•”‚©‚çŒÄ‚Ño‚·—pF”»’è‚É‰‚¶‚ÄŒõ‚ç‚¹‚é
+    // ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚Ñoï¿½ï¿½ï¿½pï¿½Fï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ÄŒï¿½ï¿½ç‚¹ï¿½ï¿½
     public void LightUp(int judgeType)
     {
-        // ”»’è‚É‰‚¶‚ÄF‚ğİ’è
+        // --- ä¿®æ­£ãƒã‚¤ãƒ³ãƒˆï¼šRendererã®ãƒŒãƒ«ãƒã‚§ãƒƒã‚¯ã¨å†å–å¾— ---
+    if (rend == null) rend = GetComponent<Renderer>();
+    if (rend == null) return; // ãã‚Œã§ã‚‚å–ã‚Œãªã‘ã‚Œã°ä½•ã‚‚ã—ãªã„
+        // ï¿½ï¿½ï¿½ï¿½É‰ï¿½ï¿½ï¿½ï¿½ÄFï¿½ï¿½İ’ï¿½
         if (judgeType == 0) // Perfect
         {
             currentColor = perfectColor;
-            alfa = 0.8f; // Perfect‚Í–¾‚é‚­
+            alfa = 0.8f; // Perfectï¿½Í–ï¿½ï¿½é‚­
         }
         else if (judgeType == 1) // OK
         {
             currentColor = okColor;
-            alfa = 0.6f; // OK‚Í­‚µˆÃ‚ß
+            alfa = 0.6f; // OKï¿½Íï¿½ï¿½ï¿½ï¿½Ã‚ï¿½
         }
-        else if (judgeType == 2) // ‹ó‘Å‚¿
+        else if (judgeType == 2) // ï¿½ï¿½Å‚ï¿½
         {
             currentColor = defaultColor;
-            alfa = 0.3f; // ‹ó‘Å‚¿‚ÍT‚¦‚ß‚É
+            alfa = 0.3f; // ï¿½ï¿½Å‚ï¿½ï¿½ÍTï¿½ï¿½ï¿½ß‚ï¿½
         }
-        else // ‚»‚Ì‘¼iMiss‚ÍŒõ‚ç‚¹‚È‚¢‘z’èj
+        else // ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½iMissï¿½ï¿½ï¿½ÍŒï¿½ï¿½ç‚¹ï¿½È‚ï¿½ï¿½zï¿½ï¿½j
         {
             currentColor = defaultColor;
             alfa = 0.3f;
         }
 
-        // F‚ğ‘¦À‚É”½‰f
+        // è‰²ã‚’å³åº§ã«åæ˜ 
         rend.material.color = new Color(currentColor.r, currentColor.g, currentColor.b, alfa);
     }
 }

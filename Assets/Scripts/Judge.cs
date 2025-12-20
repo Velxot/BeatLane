@@ -2,7 +2,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Collections.Generic; // Dictionary���g�����߂ɒǉ�
+using System.Collections.Generic;
 
 public class Judge : MonoBehaviour
 {
@@ -13,7 +13,7 @@ public class Judge : MonoBehaviour
     [SerializeField] private NEMSYSControllerInput nemsysController;
     [SerializeField] private MusicManager musicManager;
 
-    
+
     int[] judgecnt = { 0, 0, 0, 0 };
     int score = 0;
     float displayScore = 0f;
@@ -38,7 +38,7 @@ public class Judge : MonoBehaviour
     // ���肳�ꂽ�m�[�c�̑��� (�ʏ�m�[�c��Perfect/OK/Miss + �����O�m�[�c�̊J�n/�I����Perfect/OK/Miss)
     private int judgedNotesCount = 0;
 
-   
+
     // �����p�̔���^�C�v��`
     enum JudgementType { Start, Release }
 
@@ -48,7 +48,7 @@ public class Judge : MonoBehaviour
         slider.value = 0f;
         laneposition = 2;
         judgedNotesCount = 0;
-        
+
         activateLane();
     }
 
@@ -64,54 +64,99 @@ public class Judge : MonoBehaviour
 
         bool usesController = nemsysController != null && nemsysController.IsInitialized;
 
-        // ������ �����n�߁E�ʏ�m�[�c�̃^�b�v���� (GetButtonDown) ������
-        if ((usesController && nemsysController.GetButtonDown(0)) || Input.GetKeyDown(KeyCode.S))
-        {
-            CheckNoteHit(laneposition);
-        }
-        if ((usesController && nemsysController.GetButtonDown(1)) || Input.GetKeyDown(KeyCode.F))
-        {
-            CheckNoteHit(laneposition + 1);
-        }
-        if ((usesController && nemsysController.GetButtonDown(2)) || Input.GetKeyDown(KeyCode.J))
-        {
-            CheckNoteHit(laneposition + 2);
-        }
-        if ((usesController && nemsysController.GetButtonDown(3)) || Input.GetKeyDown(KeyCode.L))
-        {
-            CheckNoteHit(laneposition + 3);
-        }
+        // --- 通常ノーツ / レーン切り替えの判定 (押した瞬間) ---
+        if ((usesController && nemsysController.GetButtonDown(0)) || Input.GetKeyDown(KeyCode.S)) CheckNoteHit(laneposition);
+        if ((usesController && nemsysController.GetButtonDown(1)) || Input.GetKeyDown(KeyCode.F)) CheckNoteHit(laneposition + 1);
+        if ((usesController && nemsysController.GetButtonDown(2)) || Input.GetKeyDown(KeyCode.J)) CheckNoteHit(laneposition + 2);
+        if ((usesController && nemsysController.GetButtonDown(3)) || Input.GetKeyDown(KeyCode.L)) CheckNoteHit(laneposition + 3);
 
-
+        // レーン移動
         if (laneposition > 0 && ((usesController && nemsysController.GetButtonDown(4)) || Input.GetKeyDown(KeyCode.E)))
         {
             laneposition--;
             activateLane();
+            CheckNoteHit(16);
         }
-
         if (laneposition < 4 && ((usesController && nemsysController.GetButtonDown(5)) || Input.GetKeyDown(KeyCode.I)))
         {
             laneposition++;
             activateLane();
+            CheckNoteHit(17);
         }
+        //トレースノーツの自動判定 (毎フレーム) ---
+        HandleTraceNoteHit();
 
-        // Miss����
+        // Miss判定
         HandleNormalNoteMiss();
     }
 
-    // ������ �C��: �ʏ�m�[�c��Miss��������\�b�h�ɐ؂�o�� ������
+    // --- 追加: ボタンが「押しっぱなし」かどうかを判定するヘルパー ---
+    bool IsLanePressed(int laneIndex)
+    {
+        bool usesController = nemsysController != null && nemsysController.IsInitialized;
+
+        // laneIndexはlaneposition(0-4) + ボタン位置(0-3)
+        int buttonIdx = laneIndex - laneposition;
+
+        if (buttonIdx < 0 || buttonIdx > 3) return false;
+
+        if (usesController)
+        {
+            return nemsysController.GetButton(buttonIdx); // コントローラーの現在の状態
+        }
+        else
+        {
+            KeyCode[] keys = { KeyCode.S, KeyCode.F, KeyCode.J, KeyCode.L };
+            return Input.GetKey(keys[buttonIdx]);
+        }
+    }
+
+    // --- 追加: トレースノーツの処理 ---
+    void HandleTraceNoteHit()
+    {
+        if (notesManager == null || notesManager.NotesTime.Count == 0) return;
+
+        // 全ノーツを走査 (逆順にループすることで削除時のインデックスずれを防ぐ)
+        for (int i = 0; i < notesManager.NotesTime.Count; i++)
+        {
+            // トレースノーツ)の場合
+            if (notesManager.LaneNum[i] % 2 == 1)
+            {
+                float noteIdealTime = notesManager.NotesTime[i] + musicManager.MusicStartTime;
+                int lane = notesManager.LaneNum[i] / 2; // レーン番号の取得ロジックに合わせる
+
+                // 判定ラインに到達した（あるいは少し過ぎた）瞬間
+                if (Time.time >= noteIdealTime - 0.05f)
+                {
+                    // 該当レーンが押されているか確認
+                    if (IsLanePressed(lane))
+                    {
+                        Debug.Log("Trace Perfect!");
+                        Judgement(0, i, lane); // Perfect扱いで処理
+                        return; // 1フレームに1つ処理すれば十分（リストが変わるため）
+                    }
+                    // 判定時間を大幅に過ぎた場合はMiss (HandleNormalNoteMissでも処理されるが念のため)
+                }
+            }
+        }
+    }
+
     void HandleNormalNoteMiss()
     {
         if (notesManager.NotesTime.Count > 0)
         {
             float noteIdealTime = notesManager.NotesTime[0] + musicManager.MusicStartTime;
 
-            if (Time.time > noteIdealTime + 0.10f)
+            // 判定幅（0.10f）を完全に通り過ぎた場合のみMissとする
+            // かつ、現在の時間が理想時間より明らかに未来であることを確認
+            if (Time.time > noteIdealTime + 0.12f)
             {
+                // デバッグログでどのノーツがMissになったか特定しやすくする
+                Debug.Log($"Miss確定: Lane={notesManager.LaneNum[0]} Time={notesManager.NotesTime[0]}");
+
                 message(2); // Miss
-                deleteData(0); // �ʏ�m�[�c���폜
+                deleteData(0);
                 judgedNotesCount++;
-                Debug.Log($"Miss (�����폜) - ����ςݒʏ�m�[�c: {judgedNotesCount}");
                 slider.value -= 1.0f;
             }
         }
@@ -157,33 +202,40 @@ public class Judge : MonoBehaviour
         }
     }
 
-    // ������ �C��: CheckNoteHit (�����O�m�[�c�̉����n�߂𔻒�ɒǉ�) ������
+    // 既存のCheckNoteHitを修正 (トレースノーツが重複反応しないように)
     void CheckNoteHit(int lane)
     {
-
-        // 1. �ʏ�m�[�c (type:1) �̔��� (NotesManager��type:1�݂̂��i�[����Ă���O��)
         for (int i = 0; i < notesManager.LaneNum.Count; i++)
         {
-            if (notesManager.LaneNum[i] == lane)
+            if (notesManager.LaneNum[i] < 16 && notesManager.LaneNum[i] % 2 == 1) continue;
+
+            // --- レーン切替ノーツ (16以上) の判定 ---
+            if (notesManager.LaneNum[i] >= 16 && notesManager.LaneNum[i] == lane)
+            {
+                float noteIdealTime = notesManager.NotesTime[i] + musicManager.MusicStartTime;
+                float timeLag = GetABS(Time.time - noteIdealTime);
+
+                // 本来ならOKの範囲（0.10f以内）であれば実行
+                if (timeLag <= 0.10f)
+                {
+                    // 第1引数に 0 を渡すことで、Judgementメソッド内で必ず Perfect 判定（<= 0.045f）になります
+                    Judgement(0f, i, lane);
+                    return;
+                }
+            }
+            // 通常ノーツ (偶数)
+            if (notesManager.LaneNum[i] < 16 && notesManager.LaneNum[i] / 2 == lane && notesManager.LaneNum[i] % 2 == 0)
             {
                 float noteIdealTime = notesManager.NotesTime[i] + musicManager.MusicStartTime;
                 float timeLag = GetABS(Time.time - noteIdealTime);
 
                 if (timeLag <= 0.10f)
                 {
-                    Judgement(timeLag, i, lane); // �ʏ�m�[�c����
-                    return;
-                }
-                else if (Time.time < noteIdealTime)
-                {
-                    Debug.Log($"���[��{lane}: �������i�ʏ�m�[�c�j");
-                    TriggerLaneLight(lane, 2);
+                    Judgement(timeLag, i, lane);
                     return;
                 }
             }
         }
-
-        Debug.Log($"���[��{lane}: ��ł�");
         TriggerLaneLight(lane, 2);
     }
 
@@ -191,6 +243,9 @@ public class Judge : MonoBehaviour
     // �ʏ�m�[�c�̔��菈��
     void Judgement(float timeLag, int noteIndex, int lane)
     {
+        // インデックスが現在のリストの範囲内か再確認（二重判定防止）
+        if (noteIndex >= notesManager.NotesTime.Count) return;
+
         if (timeLag <= 0.045f)
         {
             Debug.Log("Perfect");
@@ -244,13 +299,26 @@ public class Judge : MonoBehaviour
 
     void TriggerLaneLight(int laneNum, int judgeType)
     {
-        if (laneLights != null && laneNum >= 0 && laneNum < laneLights.Length && laneLights[laneNum] != null)
+        if (laneLights == null || laneLights.Length == 0) return;
+
+        // レーン切替ノーツ（16, 17など）の場合は、全レーンを光らせる
+        if (laneNum >= 16)
         {
-            laneLights[laneNum].LightUp(judgeType);
+            for (int i = 0; i < laneLights.Length; i++)
+            {
+                if (laneLights[i] != null)
+                {
+                    laneLights[i].LightUp(judgeType);
+                }
+            }
         }
-        else
+        // 通常のレーン番号（0〜7など）の場合、配列の範囲内かチェックして光らせる
+        else if (laneNum >= 0 && laneNum < laneLights.Length)
         {
-            Debug.LogWarning($"���[��{laneNum}��lightsScript���ݒ肳��Ă��܂���");
+            if (laneLights[laneNum] != null)
+            {
+                laneLights[laneNum].LightUp(judgeType);
+            }
         }
     }
 

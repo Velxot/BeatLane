@@ -85,16 +85,9 @@ public class NotesManager : MonoBehaviour
             return;
         }
 
-        // ������ 2. �I�����ꂽ ChartData ����t�@�C�������擾 ������
         ChartData selectedChart = selectedSong.availableCharts[chartIndex];
-        string chartFileName = selectedChart.chartFileName; // ���ʃt�@�C�������擾
+        string chartFileName = selectedChart.chartFileName;
 
-        // ������ songName �𕈖ʖ��ɒu��������i�����K�v�Ȃ�j
-        // songName = selectedSong.songName; // �y�Ȗ����̂͂��̂܂�
-
-        // 3. ���ʃt�@�C���� Resources ����ǂݍ���
-        // ����: TextAsset json = (TextAsset)Resources.Load("Notes/" + songName);
-        // ������ �ύX: chartFileName���g�p ������
         TextAsset json = (TextAsset)Resources.Load(chartFileName);
 
         if (json == null)
@@ -111,27 +104,20 @@ public class NotesManager : MonoBehaviour
         string inputString = Resources.Load<TextAsset>(SongName).ToString();
         Data inputJson = JsonUtility.FromJson<Data>(inputString);
 
-        //���m�[�c����ݒ�
-        //noteNum = inputJson.notes.Length;
-
-        // �m�[�c������U�N���A
         NotesTime.Clear();
         LaneNum.Clear();
         NoteType.Clear();
         NotesObj.Clear();
-        noteNum = 0; // �m�[�c���������Z�b�g
+        noteNum = 0; 
 
         for (int i = 0; i < inputJson.notes.Length; i++)
         {
-            // ������ �ǉ�: type��1�i�ʏ�m�[�c�j�̏ꍇ�̂ݏ������s�� ������
             if (inputJson.notes[i].type == 1)
             {
-                //���Ԃ��v�Z
                 float kankaku = 60 / (inputJson.BPM * (float)inputJson.notes[i].LPB);
                 float beatSec = kankaku * (float)inputJson.notes[i].LPB;
                 float time = (beatSec * inputJson.notes[i].num / (float)inputJson.notes[i].LPB) + inputJson.offset * 0.01f;
 
-                //���X�g�ɒǉ�
                 NotesTime.Add(time);
                 LaneNum.Add(inputJson.notes[i].block);
                 NoteType.Add(inputJson.notes[i].type);
